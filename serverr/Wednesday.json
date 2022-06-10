@@ -1,0 +1,15 @@
+{
+    "Wednesday": [
+        {
+            "time": "FIRST, 8:30 - 10:00",
+            "name": "Software Mobile Development [Lab]",
+            "room": "S2.218"
+        },
+        {
+            "time": "SECOND, 10:15 - 11:45",
+            "name": "Software Mobile Development [Lecture]",
+            "room": "S2.114"
+        }
+    ]
+}
+

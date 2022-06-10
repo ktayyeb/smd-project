@@ -1,0 +1,16 @@
+{
+    "Tuesday": [
+        {
+            "time": "FIRST, 8:30 - 10:00",
+            "name": "Software Project II [Lab]",
+            "room": "S2.219"
+        },
+        {
+            "time": "SECOND, 10:15 - 11:45", 
+            "name": "Software Project II [Lab] ",
+            "room": "S2.219"
+            
+        }
+    ]
+}
+

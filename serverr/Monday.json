@@ -1,0 +1,20 @@
+{
+    "Monday": [
+        {
+          "time": "FIRST, 10:15-11:45", 
+          "name": "Introduction to Image Processing and Computer Vision [Lecture]",
+          "room": "S3.334"
+          
+      },
+      {
+         "time": "SECOND, 1:45 - 3:15", 
+          "name": "Software Cloud Computing [Lab]",
+          "room": "M3.333"
+      }, 
+      {
+          "time": "THIRD, 3:45 - 5:15", 
+          "name": "Software Cloud Computing [Lecture]",
+          "room": "S3.334"
+      }
+      ]
+}

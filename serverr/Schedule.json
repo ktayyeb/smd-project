@@ -1,0 +1,38 @@
+{
+    "Sunday": [
+        
+        {
+          "name": "Sunday Subject"
+        }
+      ],
+      
+    "Monday": [
+      {
+        "name": "Monday Subject"
+      }
+    ],
+    
+    "Tuesday": [
+      {
+        "name": "Tuesday Subject"
+      }
+    ],
+    
+    "Wednesday": [
+        
+      {
+        "name": "Wednesday Subject"
+      }
+     
+    ],
+    
+    "Thursday": [
+        
+      {
+        "name": "Thursday Subject"
+      }
+     
+    ]
+  
+}
+

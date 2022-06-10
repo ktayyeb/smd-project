@@ -1,0 +1,20 @@
+{
+    "Sunday": [
+        {
+            "time": "SECOND, 10:15-11:45", 
+            "name": "Project Management [Lecture]",
+            "room": "M1.205"
+        },
+        {
+            "time": "FOURTH, 1:45 - 3:15",
+            "name": "Big Data and NoSQL [Lab]",
+            "room": "S2.218"
+        }, 
+        {
+            "time": "FIFTH, 3:45 - 5:15", 
+            "name": "Big Data and NoSQL[Lab] ",
+            "room": "S2.218"
+        }
+    ]
+}
+
