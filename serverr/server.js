@@ -1,5 +1,15 @@
 const express = require('express');
+const mongoose=require('mongoose')
+//const router =express.Router();
 const app  = express();
+const bodyParser = require('body-parser')
+
+// parse application/json
+app.use(bodyParser.json())
+
+//const Assessment= require('./models/Assessment');
+
+
 const Schedule = require('./Schedule.json');
 const Sunday = require('./Sunday.json')
 const Monday = require('./Monday.json')
@@ -8,6 +18,15 @@ const Wednesday = require('./Wednesday.json')
 const Thursday = require('./Thursday.json')
 const Friday = require('./Friday.json')
 const Saturday = require('./Saturday.json')
+
+mongoose.connect('mongodb+srv://khaled:1234@cluster0.6ljqi.mongodb.net/?retryWrites=true&w=majority', ()=>
+  console.log("DB connected")
+  );
+
+const courseWorkRoute=require('./routes/courseWork')
+
+app.use('/courseWork',courseWorkRoute);
+
 
 app.get('/Schedule', function (req, res) {
   return res.send(Schedule);
@@ -40,6 +59,8 @@ app.get('/Friday', function (req, res) {
 app.get('/Saturday', function (req, res) {
   return res.send(Saturday["Saturday"]);
 });
+
+
 
 
 
