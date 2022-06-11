@@ -1,14 +1,15 @@
 {
-    "name": "smd_server",
-    "version": "1.0.0",
-    "description": "",
-    "main": "server.js",
-    "scripts": {
-      "start": "node server.js"
-    },
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-      "express": "^4.17.3"
-    }
+  "name": "smd_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3",
+    "mongoose": "^6.3.6"
   }
+}
