@@ -1,7 +1,14 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+//model of a quiz,assignment,midterm,etc.
 const assessmentSchema = new Schema({
+
+    sid:{
+        type:Number,
+        required:true
+    },
+
     cid:{
         type:Number,
         required:true
