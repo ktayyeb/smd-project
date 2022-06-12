@@ -3,12 +3,24 @@ const router =express.Router();
 const Assessment=require('../models/Assessment')
 const GPA=require('../models/GPA')
 const FinalGrades=require('../models/finalGrades')
+const Weights=require('../models/weights')
 
 //posts a grade of a student in a specific assessment
 router.post('/assessment',(req,res)=>{
   Assessment.create(req.body).then((a)=> {res.send(a)}).catch((e)=>{console.log(e);});
   
 });
+
+//posts a new course
+router.post('/newCourse',(req,res)=>{
+  Weights.create(req.body).then((a)=> {res.send(a)}).catch((e)=>{console.log(e);});
+  
+});
+
+
+
+
+
 
 
 //posts the neumerical final grade the student gets in a course
@@ -42,6 +54,33 @@ router.post('/finalGrades',async(req,res)=>{
     hours:req.body.hours,
     result:Result
   }).then((a)=> {res.send(a)}).catch((e)=>{console.log(e);});
+  
+});
+
+router.get('/expectations',async(req,res)=>{
+
+  const Sid = req.body.sid
+  const Cid = req.body.cid
+
+  const assignments=await getBest(Sid,Cid, 0);
+  if(assignments==null){assignments=0}
+
+  const quizzes=await getBest(Sid,Cid, 1);
+  if(quizzes==null){quizzes=0}
+
+  const midterm=await getBest(Sid,Cid, 2);
+  if(midterm==null){midterm=0}
+  
+  const projects=await getBest(Sid,Cid, 3);
+  if(projects==null){projects=0}
+
+  const final=await getBest(Sid,Cid, 4);
+  if(final==null){final=0}
+
+  const Result= assignments+quizzes+midterm+projects+final;
+  console.log(Result);
+
+
   
 });
 
