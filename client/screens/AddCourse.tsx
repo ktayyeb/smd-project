@@ -48,18 +48,19 @@ const HomeScreen = () => {
 })
  
  
- const createCourse= (async () =>{ 
+ const createCourse = async () =>{ 
      console.log("ya khaled ya 3alamy")
      let res = await api .post('/newCourse',{cid:Number(courseID)});
      console.log(res); 
- }); 
+ }; 
 
 
- const handleClick = async (e) => {
-  e.preventDefault()
-  console.log(courseID)
-  axios.post('http://localhost:3000/courseWork', { courseID: Number(courseID) })
-  .then(response => console.log(response.data));
+ const handleClick = async () => {
+  
+  console.log("ay zeft");
+  console.log(courseID);
+  await axios.post('http://192.168.100.25:3000/courseWork/newCourse', { cid: Number(courseID)})
+  .then(response => console.log(response.data)).catch(error => console.log(error));
 };
 
 
@@ -208,7 +209,7 @@ const HomeScreen = () => {
 
       <Button
         title="Press me"
-        onPress={() => handleClick}
+        onPress={handleClick}
       />
 
 
