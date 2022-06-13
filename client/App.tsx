@@ -2,6 +2,7 @@ import Schedule from './screens/Schedule';
 import ChooseDay from './screens/ChooseDay';
 import HomeScreen from './screens/HomeScreen';
 import GPACalculator from './screens/GPACalculator';
+import Add_Course from './screens/AddCourse'
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -42,6 +43,14 @@ const App = () => (
         options={{
           headerShown: true,
           title: 'Schedule'  
+        }} 
+      />
+      <Stack.Screen 
+        name="Add_Course" 
+        component={Add_Course}
+        options={{
+          headerShown: true,
+          title: 'Add Course'  
         }} 
       />
     </Stack.Navigator>

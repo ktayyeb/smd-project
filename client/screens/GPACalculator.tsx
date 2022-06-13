@@ -31,7 +31,10 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Button
+     <Button style={styles.buttonStyle}
+        onPress={() => {navigation.navigate('Add_Course', {
+          });
+        }}
         title="Add Course"
         color="#000000"
       />

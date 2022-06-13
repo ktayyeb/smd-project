@@ -53,8 +53,6 @@ const HomeScreen = () => {
       });
   }, []);
 
-  
-
 
   const renderItem = ({ item }) => (
     
