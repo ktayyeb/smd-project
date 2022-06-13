@@ -6,10 +6,76 @@ const FinalGrades=require('../models/finalGrades')
 const Weights=require('../models/weights')
 
 //posts a grade of a student in a specific assessment
-router.post('/assessment',(req,res)=>{
-  Assessment.create(req.body).then((a)=> {res.send(a)}).catch((e)=>{console.log(e);});
+router.post('/assessment',async(req,res)=>{
+
+
+  const courseInfo = await Weights.findOne({sid:req.body.sid,cid:req.body.cid});
+
+  const Type = req.body.type;
+
+  const assessmentInfo = Type===0?courseInfo.assignments:Type===1?courseInfo.quizzes:Type===2?courseInfo.midterms:Type===3?courseInfo.projects:courseInfo.final;
+  console.log(courseInfo);
+  console.log(assessmentInfo);
+  //console.log(assessmentInfo);
+  //console.log(course);
+
+  
+  Assessment.create({
+    sid:req.body.sid,
+    cid:req.body.cid,
+    title:courseInfo.title,
+    type:Type,
+    weight:assessmentInfo.weight,
+    num:(assessmentInfo.completed+1),
+    grade:req.body.grade,
+    totalGrade:req.body.totalGrade,
+    best:assessmentInfo.best,
+    totalNum:assessmentInfo.num
+    
+  }).then((a)=> {res.send(a)}).catch((e)=>{res.send(e)});
+
+  const update= await updateWeight(req.body.sid,req.body.cid,Type,assessmentInfo);
+  console.log(update);
+
+
+  //Assessment.create(req.body).then((a)=> {res.send(a)}).catch((e)=>{console.log(e);});
   
 });
+
+async function updateWeight(Sid,Cid,Type,assessment){
+  const Results=await getBest(Sid,Cid, 0,assessment.best);
+  console.log(Results);
+  if(Type===0){
+  console.log("i'm here")  
+  Weights.updateOne({sid:Sid,cid:Cid},{assignments:{num:assessment.num,weight:assessment.weight,best:assessment.best,completed:(assessment.completed+1),results:Results}})
+  .then((update)=> {return update;}).catch((e)=>{console.log(e)});
+}
+
+if(Type===1){
+  Weights.updateOne({sid:Sid,cid:Cid},{quizzes:{completed:Num,results:Results}})
+  .then((update)=> {return update;}).catch((e)=>{console.log(e)});
+}
+
+else if(Type===2){
+  Weights.updateOne({sid:Sid,cid:Cid},{midterms:{completed:Num,results:Results}})
+  .then((update)=> {return update;}).catch((e)=>{console.log(e)});
+}
+
+else if(Type===3){
+  Weights.updateOne({sid:Sid,cid:Cid},{projects:{completed:Num,results:Results}})
+  .then((update)=> {return update;}).catch((e)=>{console.log(e)});
+}
+
+else if(Type===4){
+  Weights.updateOne({sid:Sid,cid:Cid},{final:{completed:Num,results:Results}})
+  .then((update)=> {return update;}).catch((e)=>{console.log(e)});
+}
+
+else{
+  return null;
+}
+
+}
 
 //posts a new course
 router.post('/newCourse',(req,res)=>{
@@ -87,20 +153,42 @@ router.get('/expectations',async(req,res)=>{
 });
 
 //calculate the best percentage a student can get out of an assessment(quizzes,assignments,etc)
-async function getBest(Sid,Cid, Type) {
-  let Best = await Assessment.findOne({ sid:Sid, cid: Cid, type: Type })
-  if(Best==null){return null;}
-  Best=Best.best
+async function getBest(Sid,Cid, Type,Best) {
+  // let Best = await Weights.findOne({ sid:Sid, cid: Cid, type: Type })
+  // if(Best==null){return null;}
+  // Best=Best.best
+  console.log(Sid);
+  console.log(Cid);
+  console.log(Type);
+  console.log(Best);
+
   let arr =  await Assessment.find({ sid:Sid, cid: Cid, type: Type })
                             .sort({grade:-1})
                             .limit(Best);
 
   let score = 0;
   let total = 0;
+
+
+  const len=arr.length
+  let ratio=0
+  console.log(arr)
+  
+  if (len>=arr[0].best){
+    ratio=1
+  }
+  else{
+    ratio=len/arr[0].best
+  }
+
+  console.log(ratio)
+
+
   let result = arr.reduce((prev, x) => {
     score += x.grade;
     total += x.totalGrade;
-    return (score / total) * x.weight;
+
+    return (score / total) * x.weight*(ratio);
   }, 0);
 
   let str= Type==0?"Assignments:":Type==1?"Quizzes:":Type==2?"midterm:":Type==3?"project:":"final:";
