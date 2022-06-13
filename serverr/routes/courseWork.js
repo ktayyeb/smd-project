@@ -17,8 +17,10 @@ router.post('/newCourse',(req,res)=>{
   
 });
 
+router.get('/allCourses/:sid',(req,res)=>{
+  Weights.find({sid:req.params.sid},{title:1,cid:1}).sort({title:-1}).then((courses)=> {res.send(courses);} ).catch((e)=>{res.send(e)});
 
-
+});
 
 
 
