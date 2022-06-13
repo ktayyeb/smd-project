@@ -31,31 +31,39 @@ const weightsSchema = new Schema({
         weight:Number,
         best:Number,
         completed:{type:Number,default:0},
-        result:Number,
+        results:{type:Number,default:0},
     },
 
     quizzes:{
         num:Number,
         weight:Number,
-        best:Number,        
+        best:Number,
+        completed:{type:Number,default:0},
+        results:{type:Number,default:0},
     },
 
     midterms:{
         num:Number,
         weight:Number,
         best:Number,
+        completed:{type:Number,default:0},
+        results:{type:Number,default:0},
     },
 
     projects:{
         num:Number,
         weight:Number,
-        best:Number,  
+        best:Number,
+        completed:{type:Number,default:0},
+        results:{type:Number,default:0},
     },
 
     final:{
         num:Number,
         weight:Number,
         best:Number,
+        completed:{type:Number,default:0},
+        results:{type:Number,default:0},
     },
 
 });
