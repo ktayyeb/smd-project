@@ -6,62 +6,62 @@ const weightsSchema = new Schema({
 
     sid:{
         type:Number,
-        //required:true
+        required:true
     },
 
     cid:{
         type:Number,
-        //required:true
+        required:true
     },
 
     title:{
         type:String,
-        //required:true
+        required:true
     },
 
 
 
     hours:{
         type:Number,
-        //required:true
+        required:true
     },
 
     assignments:{
-        num:Number,
-        weight:Number,
-        best:Number,
+        num:{type:Number,required:true},
+        weight:{type:Number,required:true},
+        best:{type:Number,required:true},
         completed:{type:Number,default:0},
         results:{type:Number,default:0},
     },
 
     quizzes:{
-        num:Number,
-        weight:Number,
-        best:Number,
+        num:{type:Number,required:true},
+        weight:{type:Number,required:true},
+        best:{type:Number,required:true},
         completed:{type:Number,default:0},
         results:{type:Number,default:0},
     },
 
     midterms:{
-        num:Number,
-        weight:Number,
-        best:Number,
+        num:{type:Number,required:true},
+        weight:{type:Number,required:true},
+        best:{type:Number,required:true},
         completed:{type:Number,default:0},
         results:{type:Number,default:0},
     },
 
     projects:{
-        num:Number,
-        weight:Number,
-        best:Number,
+        num:{type:Number,required:true},
+        weight:{type:Number,required:true},
+        best:{type:Number,required:true},
         completed:{type:Number,default:0},
         results:{type:Number,default:0},
     },
 
     final:{
-        num:Number,
-        weight:Number,
-        best:Number,
+        num:{type:Number,required:true},
+        weight:{type:Number,required:true},
+        best:{type:Number,required:true},
         completed:{type:Number,default:0},
         results:{type:Number,default:0},
     },
