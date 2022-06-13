@@ -13,7 +13,7 @@ router.post('/assessment',(req,res)=>{
 
 //posts a new course
 router.post('/newCourse',(req,res)=>{
-  Weights.create(req.body).then((a)=> {res.send(a)}).catch((e)=>{console.log(e);});
+  Weights.create(req.body).then((a)=> {res.send(a);} ).catch((e)=>{res.send(e)});
   
 });
 
