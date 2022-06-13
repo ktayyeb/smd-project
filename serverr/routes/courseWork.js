@@ -20,7 +20,7 @@ router.post('/assessment',async(req,res)=>{
   //console.log(course);
 
   
-  Assessment.create({
+  await Assessment.create({
     sid:req.body.sid,
     cid:req.body.cid,
     title:courseInfo.title,
