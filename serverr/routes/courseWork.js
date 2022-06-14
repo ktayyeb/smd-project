@@ -52,22 +52,22 @@ async function updateWeight(Sid,Cid,Type,assessment){
 }
 
 if(Type===1){
-  Weights.updateOne({sid:Sid,cid:Cid},{quizzes:{completed:Num,results:Results}})
+  Weights.updateOne({sid:Sid,cid:Cid},{quizzes:{num:assessment.num,weight:assessment.weight,best:assessment.best,completed:(assessment.completed+1),results:Results}})
   .then((update)=> {return update;}).catch((e)=>{console.log(e)});
 }
 
 else if(Type===2){
-  Weights.updateOne({sid:Sid,cid:Cid},{midterms:{completed:Num,results:Results}})
+  Weights.updateOne({sid:Sid,cid:Cid},{midterms:{num:assessment.num,weight:assessment.weight,best:assessment.best,completed:(assessment.completed+1),results:Results}})
   .then((update)=> {return update;}).catch((e)=>{console.log(e)});
 }
 
 else if(Type===3){
-  Weights.updateOne({sid:Sid,cid:Cid},{projects:{completed:Num,results:Results}})
+  Weights.updateOne({sid:Sid,cid:Cid},{projects:{num:assessment.num,weight:assessment.weight,best:assessment.best,completed:(assessment.completed+1),results:Results}})
   .then((update)=> {return update;}).catch((e)=>{console.log(e)});
 }
 
 else if(Type===4){
-  Weights.updateOne({sid:Sid,cid:Cid},{final:{completed:Num,results:Results}})
+  Weights.updateOne({sid:Sid,cid:Cid},{final:{num:assessment.num,weight:assessment.weight,best:assessment.best,completed:(assessment.completed+1),results:Results}})
   .then((update)=> {return update;}).catch((e)=>{console.log(e)});
 }
 
