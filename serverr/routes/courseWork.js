@@ -1,9 +1,56 @@
 const express = require('express');
 const router =express.Router();
 const Assessment=require('../models/Assessment')
-const GPA=require('../models/GPA')
-const FinalGrades=require('../models/finalGrades')
+const GPA=require('../models/gpa')
+const FinalGrade=require('../models/finalGrade')
 const Weights=require('../models/weights')
+const Numeric=require('../models/numeric')
+
+
+//calculate the best percentage a student can get out of an assessment(quizzes,assignments,etc)
+async function getBest(Sid,Cid, Type,Best) {
+  // let Best = await Weights.findOne({ sid:Sid, cid: Cid, type: Type })
+  // if(Best==null){return null;}
+  // Best=Best.best
+  console.log(Sid);
+  console.log(Cid);
+  console.log(Type);
+  console.log(Best);
+
+  let arr =  await Assessment.find({ sid:Sid, cid: Cid, type: Type })
+                            .sort({grade:-1})
+                            .limit(Best);
+
+  let score = 0;
+  let total = 0;
+
+
+  const len=arr.length
+  let ratio=0
+  console.log(arr)
+  
+  if (len>=Best){
+    ratio=1
+  }
+  else{
+    ratio=len/Best
+  }
+
+  console.log(ratio)
+
+
+  let result = arr.reduce((prev, x) => {
+    score += x.grade;
+    total += x.totalGrade;
+
+    return (score / total) * x.weight*(ratio);
+  }, 0);
+
+  let str= Type==0?"Assignments:":Type==1?"Quizzes:":Type==2?"midterm:":Type==3?"project:":"final:";
+  console.log(str + result.toString() + "%");
+
+  return result;
+}
 
 //posts a grade of a student in a specific assessment
 router.post('/assessment',async(req,res)=>{
@@ -19,7 +66,12 @@ router.post('/assessment',async(req,res)=>{
   //console.log(assessmentInfo);
   //console.log(course);
 
-  
+  if(assessmentInfo.completed===assessmentInfo.completed){
+    res.send({message:"You inserted all of your assessments here!"});
+    
+  }
+
+  else{
   await Assessment.create({
     sid:req.body.sid,
     cid:req.body.cid,
@@ -37,10 +89,11 @@ router.post('/assessment',async(req,res)=>{
   const update= await updateWeight(req.body.sid,req.body.cid,Type,assessmentInfo);
   console.log(update);
 
-
   //Assessment.create(req.body).then((a)=> {res.send(a)}).catch((e)=>{console.log(e);});
+  }
   
 });
+
 
 async function updateWeight(Sid,Cid,Type,assessment){
   const Results=await getBest(Sid,Cid, Type,assessment.best);
@@ -88,11 +141,88 @@ router.get('/allCourses/:sid',(req,res)=>{
 
 });
 
+router.post('/numerics',(req,res)=>{
+  Numeric.create(req.body).then((a)=> {res.send(a);} ).catch((e)=>{res.send(e)});
+});
 
+
+router.post('/finalGrade',async (req,res)=>{
+  
+  let numericScore = await Numeric.findOne({result:req.body.result})
+  console.log('numeric',numericScore);
+  numericScore=numericScore.numeric
+  console.log('numeric',numericScore);
+
+  let hrs= await Weights.findOne({sid:req.body.sid,cid:req.body.cid})
+  console.log('weight',hrs);
+  hrs=hrs.hours
+  console.log('hrs',hrs);
+
+  console.log('numericScore:',numericScore);
+  console.log('hours:',hrs);
+  FinalGrade.create({
+    sid:req.body.sid,
+
+    cid:req.body.cid,
+
+    hours:hrs,
+
+    result:req.body.result,
+
+    numeric:numericScore
+    
+  }).then((a)=> {res.send(a)}).catch((e)=>{res.send(e)});
+
+});
+
+router.get('/gpa/:sid',async(req,res)=>{
+
+  let gpa = await GPA.findOne({sid:req.params.sid})
+  console.log(gpa);
+  if(gpa==null)   
+
+  {
+
+    let grades = await FinalGrade.find({sid:req.params.sid})
+
+    console.log(grades)
+
+    let totalPoints = 0;
+    let totalHours = 0;
+
+  let studentGPA = grades.reduce((prev, x) => {
+    totalPoints += x.numeric*x.hours;
+    totalHours += x.hours;
+
+    return  totalPoints/totalHours;
+  }, 0);
+
+  console.log('totalPoints',totalPoints);
+  console.log('totalHours',totalHours);
+  console.log('studentGPA',studentGPA);
+
+  let letterGPA= await Numeric.find({numeric:studentGPA});
+  letterGPA=letterGPA.result;
+
+
+
+  GPA.create({
+    sid:req.params.sid,
+    gpa:studentGPA,
+    gpaLetter:letterGPA
+
+  }).then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
+
+
+  }
+
+  else{res.send({message:"gpa already exists"}); }
+
+});
 
 
 //posts the neumerical final grade the student gets in a course
-router.post('/finalGrades',async(req,res)=>{
+/*router.post('/finalGrades',async(req,res)=>{
 
   const Sid = req.body.sid
   const Cid = req.body.cid
@@ -123,9 +253,9 @@ router.post('/finalGrades',async(req,res)=>{
     result:Result
   }).then((a)=> {res.send(a)}).catch((e)=>{console.log(e);});
   
-});
+});*/
 
-router.get('/expectations',async(req,res)=>{
+/*router.get('/expectations',async(req,res)=>{
 
   const Sid = req.body.sid
   const Cid = req.body.cid
@@ -150,52 +280,9 @@ router.get('/expectations',async(req,res)=>{
 
 
   
-});
-
-//calculate the best percentage a student can get out of an assessment(quizzes,assignments,etc)
-async function getBest(Sid,Cid, Type,Best) {
-  // let Best = await Weights.findOne({ sid:Sid, cid: Cid, type: Type })
-  // if(Best==null){return null;}
-  // Best=Best.best
-  console.log(Sid);
-  console.log(Cid);
-  console.log(Type);
-  console.log(Best);
-
-  let arr =  await Assessment.find({ sid:Sid, cid: Cid, type: Type })
-                            .sort({grade:-1})
-                            .limit(Best);
-
-  let score = 0;
-  let total = 0;
+});*/
 
 
-  const len=arr.length
-  let ratio=0
-  console.log(arr)
-  
-  if (len>=Best){
-    ratio=1
-  }
-  else{
-    ratio=len/Best
-  }
-
-  console.log(ratio)
-
-
-  let result = arr.reduce((prev, x) => {
-    score += x.grade;
-    total += x.totalGrade;
-
-    return (score / total) * x.weight*(ratio);
-  }, 0);
-
-  let str= Type==0?"Assignments:":Type==1?"Quizzes:":Type==2?"midterm:":Type==3?"project:":"final:";
-  console.log(str + result.toString() + "%");
-
-  return result;
-}
 
 //endpoint to get the best percentage a student can get out of an assessment(quizzes,assignments,etc)
 router.get('/bests/:sid/:cid/:type',async(req,res)=>{

@@ -11,5 +11,8 @@
   "dependencies": {
     "express": "^4.17.3",
     "mongoose": "^6.3.6"
+  },
+  "devDependencies": {
+    "package": "^1.0.1"
   }
 }

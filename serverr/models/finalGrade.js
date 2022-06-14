@@ -10,10 +10,16 @@ const finalSchema = new Schema({
 
     hours:{type:Number},
 
-    result:{type:Number}
+    result:{type:String},
+
+    numeric:{type:Number},
+
+    points:{type:Number}
+
+
 
 
 });
 
 
-module.exports=mongoose.model("FinalGrades",finalSchema);
+module.exports=mongoose.model("FinalGrade",finalSchema);
