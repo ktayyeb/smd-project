@@ -51,7 +51,7 @@ async function updateWeight(Sid,Cid,Type,assessment){
   .then((update)=> {return update;}).catch((e)=>{console.log(e)});
 }
 
-if(Type===1){
+else if(Type===1){
   Weights.updateOne({sid:Sid,cid:Cid},{quizzes:{num:assessment.num,weight:assessment.weight,best:assessment.best,completed:(assessment.completed+1),results:Results}})
   .then((update)=> {return update;}).catch((e)=>{console.log(e)});
 }
@@ -174,11 +174,11 @@ async function getBest(Sid,Cid, Type,Best) {
   let ratio=0
   console.log(arr)
   
-  if (len>=arr[0].best){
+  if (len>=Best){
     ratio=1
   }
   else{
-    ratio=len/arr[0].best
+    ratio=len/Best
   }
 
   console.log(ratio)
