@@ -43,7 +43,7 @@ router.post('/assessment',async(req,res)=>{
 });
 
 async function updateWeight(Sid,Cid,Type,assessment){
-  const Results=await getBest(Sid,Cid, 0,assessment.best);
+  const Results=await getBest(Sid,Cid, Type,assessment.best);
   console.log(Results);
   if(Type===0){
   console.log("i'm here")  
