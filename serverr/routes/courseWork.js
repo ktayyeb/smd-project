@@ -70,12 +70,13 @@ router.post('/assessment',async(req,res)=>{
   console.log(assessmentInfo.completed)
   
   
-  if(assessmentInfo.completed===assessmentInfo.num){
+  if(assessmentInfo.completed>=assessmentInfo.num){
     res.send({message:"You inserted all of your assessments here!"});
     
   }
 
   else{
+    console.log('here');
   await Assessment.create({
     sid:req.body.sid,
     cid:req.body.cid,
@@ -88,10 +89,10 @@ router.post('/assessment',async(req,res)=>{
     best:assessmentInfo.best,
     totalNum:assessmentInfo.num
     
-  }).then((a)=> {res.send(a)}).catch((e)=>{res.send(e)});
+  }).then((a)=> {res.send(a);}).catch((e)=>{res.send(e)});
 
   const update= await updateWeight(req.body.sid,req.body.cid,Type,assessmentInfo);
-  console.log(update);
+  console.log('update',update);
 
   //Assessment.create(req.body).then((a)=> {res.send(a)}).catch((e)=>{console.log(e);});
   }
@@ -101,9 +102,9 @@ router.post('/assessment',async(req,res)=>{
 
 async function updateWeight(Sid,Cid,Type,assessment){
   const Results=await getBest(Sid,Cid, Type,assessment.best);
-  console.log(Results);
+  //console.log(Results);
   if(Type===0){
-  console.log("i'm here")  
+  //console.log("i'm here")  
   Weights.updateOne({sid:Sid,cid:Cid},{assignments:{num:assessment.num,weight:assessment.weight,best:assessment.best,completed:(assessment.completed+1),results:Results}})
   .then((update)=> {return update;}).catch((e)=>{console.log(e)});
 }
@@ -136,11 +137,11 @@ else{
 
 //posts a new course
 router.post('/newCourse',async(req,res)=>{
-  const courseInfo1 = await Weights.find({sid:req.body.sid,cid:req.body.cid});
-  const courseInfo2 = await Weights.find({sid:req.body.sid,title:req.body.title});
+  const courseInfo1 = await Weights.findOne({sid:req.body.sid,cid:req.body.cid});
+  const courseInfo2 = await Weights.findOne({sid:req.body.sid,title:req.body.title});
 
 
-  if(courseInfo1.length===0||courseInfo2.length===0){
+  if(courseInfo1!=null||courseInfo2!=null){
     res.send({message:"this course has been added before"});
     //return;
   }
@@ -244,7 +245,14 @@ router.get('/gpa/:sid',async(req,res)=>{
 
   }
 
-  else{res.send({message:"gpa already exists"}); }
+  else{
+    
+    
+  
+
+
+
+}
 
 });
 
