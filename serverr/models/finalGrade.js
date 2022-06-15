@@ -10,6 +10,8 @@ const finalSchema = new Schema({
 
     hours:{type:Number},
 
+    title:{type:String},
+
     result:{type:String},
 
     numeric:{type:Number},

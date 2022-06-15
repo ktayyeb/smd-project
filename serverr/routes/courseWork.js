@@ -167,15 +167,17 @@ router.post('/finalGrade',async (req,res)=>{
   let numericScore = await Numeric.findOne({result:req.body.result});
   const finalGrade= await FinalGrade.findOne({sid:req.body.sid,cid:req.body.cid});
 
-  if(finalGrade==null){res.send({message:"this course has been added before"});}
+  if(finalGrade!=null){res.send({message:"this course has been added before"});}
   //console.log('numeric',numericScore);
   else{
   numericScore=numericScore.numeric
   //console.log('numeric',numericScore);
 
-  let hrs= await Weights.findOne({sid:req.body.sid,cid:req.body.cid})
+  let course= await Weights.findOne({sid:req.body.sid,cid:req.body.cid})
   //console.log('weight',hrs);
-  hrs=hrs.hours
+  let hrs=course.hours
+
+  let Title=course.title
   //console.log('hrs',hrs);
 
   //console.log('numericScore:',numericScore);
@@ -188,6 +190,8 @@ router.post('/finalGrade',async (req,res)=>{
     cid:req.body.cid,
 
     hours:hrs,
+
+    title:Title,
 
     result:req.body.result,
 
@@ -246,10 +250,14 @@ router.get('/gpa/:sid',async(req,res)=>{
   }
 
   else{
-    gpa.then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
+    res.send(gpa);
   
 }
 
+});
+
+router.get('/allScores/:sid',(req,res)=>{
+   FinalGrade.find({sid:req.params.sid},{title:1,hours:1,result:1,numeric:1}).sort({hours:-1}).then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
 });
 
 
