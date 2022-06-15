@@ -230,7 +230,7 @@ router.post('/finalGrade',async (req,res)=>{
     
   })
 
-  const update= await updateWeight(req.body.sid,req.body.cid,Type,courseInfo.final);
+  const update= await updateWeight(req.body.sid,req.body.cid,4,courseInfo.final);
   console.log('update',update);
 
   }
