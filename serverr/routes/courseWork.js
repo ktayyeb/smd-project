@@ -234,8 +234,9 @@ router.get('/gpa/:sid',async(req,res)=>{
   console.log('totalHours',totalHours);
   console.log('studentGPA',studentGPA);
 
-  let letterGPA= await Numeric.find({numeric:studentGPA});
+  let letterGPA= await Numeric.findOne({numeric:studentGPA});
   letterGPA=letterGPA.result;
+  console.log(letterGPA);
 
 
 
