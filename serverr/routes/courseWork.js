@@ -234,9 +234,9 @@ router.get('/gpa/:sid',async(req,res)=>{
 
   let gpa = await GPA.find({sid:req.params.sid})
   console.log(gpa);
-  
+
   if(gpa.length!=0){
-    GPA.remove({sid:req.params.sid})
+    await GPA.remove({sid:req.params.sid})
   }
 
   
@@ -288,6 +288,11 @@ router.get('/gpa/:sid',async(req,res)=>{
 router.get('/allScores/:sid',(req,res)=>{
    FinalGrade.find({sid:req.params.sid},{title:1,hours:1,result:1,numeric:1}).sort({hours:-1}).then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
 });
+
+function updateFinalExam(){
+
+
+}
 
 
 
