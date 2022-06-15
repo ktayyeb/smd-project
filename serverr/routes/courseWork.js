@@ -214,6 +214,22 @@ router.post('/finalGrade',async (req,res)=>{
     
   }).then((a)=> {res.send(a)}).catch((e)=>{res.send(e)});
 
+
+  let finalExamGrade=await updateFinalExam(req.body.sid,req.body.cid);
+  await Assessment.create({
+    sid:req.body.sid,
+    cid:req.body.cid,
+    title:Title,
+    type:4,
+    weight:courseInfo.final.weight,
+    num:(courseInfo.final.completed+1),
+    grade:((finalExamGrade)/courseInfo.final.weight*100),
+    totalGrade:100,
+    best:courseInfo.final.best,
+    totalNum:courseInfo.final.num
+    
+  })
+
   }
 
 }
@@ -277,10 +293,6 @@ router.get('/gpa/:sid',async(req,res)=>{
   GPA.find({sid:req.params.sid}).then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
   //await GPA.find({sid:req.params.sid}).then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
 
-
-
-  
-
   
 
 });
@@ -289,8 +301,10 @@ router.get('/allScores/:sid',(req,res)=>{
    FinalGrade.find({sid:req.params.sid},{title:1,hours:1,result:1,numeric:1}).sort({hours:-1}).then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
 });
 
-function updateFinalExam(){
+async function updateFinalExam(Sid,Cid){
+  const courseInfo = await Weights.findOne({sid:Sid,cid:Cid});
 
+  return 100-courseInfo.assignments.results-courseInfo.quizzes.results-courseInfo.midterms.results-courseInfo.projects.results;
 
 }
 
