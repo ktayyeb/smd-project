@@ -168,8 +168,20 @@ router.post('/finalGrade',async (req,res)=>{
   let numericScore = await Numeric.findOne({result:req.body.result});
   const finalGrade= await FinalGrade.findOne({sid:req.body.sid,cid:req.body.cid});
 
-  //const courseInfo = await Weights.findOne({sid:req.body.sid,cid:req.body.cid});
+  const courseInfo = await Weights.findOne({sid:req.body.sid,cid:req.body.cid});
   //if(courseInfo.assignments.complted>=)
+
+  if(courseInfo.assignments.completed<courseInfo.assignments.num || 
+    courseInfo.quizzes.completed<courseInfo.quizzes.num ||
+    courseInfo.midterms.completed<courseInfo.midterms.num ||
+    courseInfo.projects.completed<courseInfo.projects.num ||
+    courseInfo.final.completed<courseInfo.final.num
+    ){
+    res.send({message:"You inserted all of your assessments here!"});
+    
+  }
+
+  else{
 
   if(finalGrade!=null){res.send({message:"this course has been added before"});}
   //console.log('numeric',numericScore);
@@ -204,6 +216,8 @@ router.post('/finalGrade',async (req,res)=>{
   }).then((a)=> {res.send(a)}).catch((e)=>{res.send(e)});
 
   }
+
+}
 
 });
 
@@ -352,7 +366,7 @@ router.get('/bests/:sid/:cid/:type',async(req,res)=>{
   console.log(assessmentInfo);
 
   //const result = await getBest(req.params.sid,req.params.cid,req.params.type,assessmentInfo.best);
-  res.send({performance:assessmentInfo.results})
+  res.send([{performance:assessmentInfo.results}])
   
   
 
