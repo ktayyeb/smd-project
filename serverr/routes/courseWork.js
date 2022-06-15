@@ -210,9 +210,9 @@ router.get('/assessments/:sid/:cid/:type',(req,res)=>{
 
 router.get('/gpa/:sid',async(req,res)=>{
 
-  let gpa = await GPA.findOne({sid:req.params.sid})
+  let gpa = await GPA.find({sid:req.params.sid})
   console.log(gpa);
-  if(gpa==null)   
+  if(gpa.length===0)   
 
   {
 
@@ -240,12 +240,16 @@ router.get('/gpa/:sid',async(req,res)=>{
 
 
 
-  GPA.create({
+   GPA.create({
     sid:req.params.sid,
     gpa:studentGPA,
     gpaLetter:letterGPA
 
-  }).then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
+  })//.then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
+
+  GPA.find({sid:req.params.sid}).then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
+  //await GPA.find({sid:req.params.sid}).then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
+
 
 
   }

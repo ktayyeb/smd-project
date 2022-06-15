@@ -18,6 +18,8 @@ const finalSchema = new Schema({
 
     points:{type:Number}
 
+    
+
 
 
 
