@@ -131,7 +131,7 @@ else{
 }
 
 //posts a new course
-router.post('/newCourse',(req,res)=>{
+router.post('/newCourse',async(req,res)=>{
   const courseInfo1 = await Weights.find({sid:req.body.sid,cid:req.body.cid});
   const courseInfo2 = await Weights.find({sid:req.body.sid,title:req.body.title});
 
@@ -143,7 +143,7 @@ router.post('/newCourse',(req,res)=>{
 
 
 else{
-  Weights.create(req.body).then((a)=> {res.send(a);} ).catch((e)=>{res.send(e)});
+  await Weights.create(req.body).then((a)=> {res.send(a);} ).catch((e)=>{res.send(e)});
 }
 });
 
@@ -194,7 +194,7 @@ router.post('/finalGrade',async (req,res)=>{
 
 });
 
-router.get('/assessments/:sid/:cid/:type',async(req,res)=>{
+router.get('/assessments/:sid/:cid/:type',(req,res)=>{
   Assessment.find({sid:req.params.sid,cid:req.params.cid,type:req.params.type},{title:1,num:1,grade:1,toalGrade:1}).sort({num:-1}).then((assessments)=> {res.send(assessments);} ).catch((e)=>{res.send(e)});
 
 });
