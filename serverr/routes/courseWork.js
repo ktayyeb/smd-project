@@ -230,6 +230,9 @@ router.post('/finalGrade',async (req,res)=>{
     
   })
 
+  const update= await updateWeight(req.body.sid,req.body.cid,Type,assessmentInfo);
+  console.log('update',update);
+
   }
 
 }
@@ -255,9 +258,6 @@ router.get('/gpa/:sid',async(req,res)=>{
     await GPA.remove({sid:req.params.sid})
   }
 
-  
-
-  
 
     let grades = await FinalGrade.find({sid:req.params.sid})
 
@@ -283,17 +283,16 @@ router.get('/gpa/:sid',async(req,res)=>{
 
 
 
-   GPA.create({
+   await GPA.create({
     sid:req.params.sid,
     gpa:studentGPA,
     gpaLetter:letterGPA
 
   })//.then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
 
-  GPA.find({sid:req.params.sid}).then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
+  await GPA.find({sid:req.params.sid}).then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
   //await GPA.find({sid:req.params.sid}).then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
 
-  
 
 });
 
