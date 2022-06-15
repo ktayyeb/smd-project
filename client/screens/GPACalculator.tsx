@@ -35,7 +35,7 @@ const GPACalculator = () => {
 
   useEffect(() => {
     Promise.all([
-      axios.get(`http://192.168.100.11:3000/courseWork/allCourses/222/`),
+      axios.get(`http://192.168.100.11:3000/courseWork/allCourses/5555/`),
     ]).then(([{ data: subjectsResults }]) => {
       console.log("haaa", subjectsResults);
       if (subjectsResults) setSubject(subjectsResults);
@@ -62,7 +62,7 @@ const GPACalculator = () => {
 
   const renderItem = ({ item }) => (
     <>
-      <Text style={styles.setFontSizeOne}> Courses Added </Text>
+      
       <Button
         style={styles.buttonStyle}
         onPress={() => {
@@ -78,16 +78,7 @@ const GPACalculator = () => {
       <View style={styles.space} />
       <View style={styles.space} />
 
-      <Text style={styles.setFontSizeOne}>Transcript </Text>
-      <Button
-        onPress={() => {
-          navigation.navigate("Transcript", {
-            term: "Saturday",
-          });
-        }}
-        title="Go To Transcript"
-        color="#000000"
-      />
+     
 
       {/* <Text style={styles.setFontSizeOne}> GPA: {item.GPA} </Text> */}
     </>
@@ -111,6 +102,7 @@ const GPACalculator = () => {
           color="#000000"
         />
         <View style={styles.space} />
+        <Text style={styles.setFontSizeOne}> Courses Added </Text>
 
         <FlatList
           data={subject}
@@ -119,6 +111,17 @@ const GPACalculator = () => {
         />
          <View style={styles.space} />
       </View>
+
+      <Text style={styles.setFontSizeOne}>Transcript </Text>
+      <Button
+        onPress={() => {
+          navigation.navigate("Transcript", {
+            term: "Saturday",
+          });
+        }}
+        title="Go To Transcript"
+        color="#000000"
+      />
     </ImageBackground>
   );
 

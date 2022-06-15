@@ -35,7 +35,7 @@ const AddCourse = () => {
     console.log(gpaGrade);
     await axios
       .post("http://192.168.100.11:3000/courseWork/newCourse", {
-        sid: 1500,
+        sid: 5555,
         Grade: Number(gpaGrade),
       })
       .then((response) => {
@@ -74,7 +74,7 @@ const AddCourse = () => {
   useEffect(() => {
     Promise.all([axios.get(`http://192.168.100.11:3000/${term}/`)]).then(
       ([{ data: subjectsResults }]) => {
-        console.log("haaa", subjectsResults);
+        
         if (subjectsResults) setSubject(subjectsResults);
       }
     );
@@ -82,9 +82,9 @@ const AddCourse = () => {
 
   useEffect(() => {
     Promise.all([
-      axios.get(`http://192.168.100.11:3000/courseWork/allCourses/222/`),
+      axios.get(`http://192.168.100.11:3000/courseWork/allCourses/5555/`),
     ]).then(([{ data: subjectsResults }]) => {
-      console.log("haaa", subjectsResults);
+     
       if (subjectsResults) setSubject(subjectsResults);
     });
   }, []);
@@ -92,7 +92,7 @@ const AddCourse = () => {
   useEffect(() => {
     Promise.all([axios.get(`http://192.168.100.11:3000/${id}/`)]).then(
       ([{ data: subjectsResults }]) => {
-        console.log("haaa", subjectsResults);
+       
         if (subjectsResults) setSubject(subjectsResults);
       }
     );
@@ -102,7 +102,7 @@ const AddCourse = () => {
     console.log(assignmentTotalGrade);
     await axios
       .post("http://192.168.100.11:3000/courseWork/assessment", {
-        sid: 888,
+        sid: 5555,
         cid: id,
         grade: Number(assignmentGrade),
         totalGrade: Number(assignmentTotalGrade),
@@ -123,7 +123,7 @@ const AddCourse = () => {
     console.log(assignmentTotalGrade);
     await axios
       .post("http://192.168.100.11:3000/courseWork/assessment", {
-        sid: 888,
+        sid: 5555,
         cid: id,
         grade: Number(quizGrade),
         totalGrade: Number(quizTotalGrade),
@@ -144,7 +144,7 @@ const AddCourse = () => {
     console.log(assignmentTotalGrade);
     await axios
       .post("http://192.168.100.11:3000/courseWork/assessment", {
-        sid: 888,
+        sid: 5555,
         cid: id,
         grade: Number(projectGrade),
         totalGrade: Number(projectTotalGrade),
@@ -165,7 +165,7 @@ const AddCourse = () => {
     console.log(assignmentTotalGrade);
     await axios
       .post("http://192.168.100.11:3000/courseWork/assessment", {
-        sid: 888,
+        sid: 5555,
         cid: id,
         grade: Number(midtermGrade),
         totalGrade: Number(midtermTotalGrade),
@@ -186,7 +186,7 @@ const AddCourse = () => {
     console.log(assignmentTotalGrade);
     await axios
       .post("http://192.168.100.11:3000/courseWork/assessment", {
-        sid: 888,
+        sid: 5555,
         cid: id,
         grade: Number(finalGrade),
         totalGrade: Number(finalTotalGrade),
@@ -250,7 +250,7 @@ const AddCourse = () => {
           <Button
             onPress={() => {
               navigation.navigate("Grades", {
-                sid: "222",
+                sid: "5555",
                 cid: id, 
                 type: 0,
               });
@@ -288,7 +288,7 @@ const AddCourse = () => {
           <Button
             onPress={() => {
               navigation.navigate("Grades", {
-                sid: "222",
+                sid: "5555",
                 cid: id, 
                 type: 1,
               });
@@ -326,7 +326,7 @@ const AddCourse = () => {
           <Button
             onPress={() => {
               navigation.navigate("Grades", {
-                sid: "222",
+                sid: "5555",
                 cid: id, 
                 type: 3,
               });
@@ -364,7 +364,7 @@ const AddCourse = () => {
           <Button
             onPress={() => {
               navigation.navigate("Grades", {
-                sid: "222",
+                sid: "5555",
                 cid: id, 
                 type: 2,
               });
@@ -402,12 +402,12 @@ const AddCourse = () => {
           <Button
             onPress={() => {
               navigation.navigate("Grades", {
-                sid: "222",
+                sid: "5555",
                 cid: id, 
                 type: 4,
               });
             }}
-            title="Check Final Grade"
+            title="Check Final Grades"
             color="#000000"
           />
         </View>

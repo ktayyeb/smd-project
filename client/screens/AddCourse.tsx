@@ -41,7 +41,7 @@ const AddCourse = () => {
     console.log(assignmentBest)
     await axios
       .post("http://192.168.100.11:3000/courseWork/newCourse", {
-        sid: 1500,
+        sid: 5555,
         cid: Number(courseID),
         title: courseName,
         hours: Number(creditHour),

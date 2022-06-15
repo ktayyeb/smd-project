@@ -1,7 +1,7 @@
 import { useRoute } from "@react-navigation/native";
 import * as axios from "axios";
 import React, { ReactNode, useEffect, useRef, useState } from "react";
-import { View,  StyleSheet, Image, FlatList, Alert } from "react-native";
+import { View,  StyleSheet, Image, FlatList, Alert, ImageBackground } from "react-native";
 import { Text, Card } from "react-native-elements";
 import { white } from "react-native-paper/lib/typescript/styles/colors";
 
@@ -32,6 +32,11 @@ const ListScreen2 = () => {
   );
 
   return (
+    <ImageBackground
+      source={require("../assets/Purple-Black-Abstract-4K-Phone-Wallpaper.jpg")}
+      resizeMode="cover"
+      style={styles.image}
+    >
     <View style={styles.container}>
       <View style={styles.space} />
       <Text style={styles.setFontSizeOne}> {term} </Text>
@@ -43,6 +48,7 @@ const ListScreen2 = () => {
         keyExtractor={(item) => item.name}
       />
     </View>
+    </ImageBackground>
   );
 
   type RouteParams = {
@@ -63,6 +69,10 @@ const ListScreen2 = () => {
 };
 
 const styles = StyleSheet.create({
+  image: {
+    flex: 1,
+    justifyContent: "center",
+  },
   space: {
     width: 20, // or whatever size you need
     height: 20,
@@ -76,7 +86,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#000000",
   },
   CardStyle: {
     backgroundColor: "#000000",
