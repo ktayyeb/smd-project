@@ -7,12 +7,14 @@ import { white } from "react-native-paper/lib/typescript/styles/colors";
 
 const ListScreen2 = () => {
   const route = useRoute<RouteProps>();
-  const { term } = route.params;
+  const { sid } = route.params;
+  const { cid } = route.params;
+  const { type } = route.params;
   const [subject, setSubject] = useState<Subject[]>();
 
   useEffect(() => {
     Promise.all([
-      axios.default.get(`http://192.168.100.11:3000/${term}/`),
+      axios.default.get(`http://192.168.100.11:3000/courseWork/assessments/${sid}/${cid}/${type}`),
     ]).then(([{ data: subjectsResults }]) => {
       console.log("haaa", subjectsResults);
       if (subjectsResults) setSubject(subjectsResults);
@@ -21,20 +23,20 @@ const ListScreen2 = () => {
 
   const renderItem = ({ item }) => (
     <Card style={{ flex: 1, width: 100 }}>
-      <Card.Title style={{ flex: 1 }}>{item.time}</Card.Title>
+      <Card.Title style={{ flex: 1 }}>{item.title}</Card.Title>
       <Card.Divider />
 
-      <Text style={{ marginBottom: 10 }}> {item.name} </Text>
+      <Text style={{ marginBottom: 10 }}> {item.num} </Text>
 
       <Card.Divider />
-      <Text style={{ marginBottom: 10 }}> {item.room} </Text>
+      <Text style={{ marginBottom: 10 }}> {item.grade} </Text>
     </Card>
   );
 
   return (
     <View style={styles.container}>
       <View style={styles.space} />
-      <Text style={styles.setFontSizeOne}> {term} </Text>
+      <Text style={styles.setFontSizeOne}> {cid} </Text>
       <View style={styles.space} />
 
       <FlatList
@@ -56,9 +58,12 @@ const ListScreen2 = () => {
   };
 
   type Subject = {
-    name: string;
-    room: string;
-    time: string;
+    _id: string;
+    cid: number;
+    title: string;
+    grade: number; 
+    totalGrade: number; 
+    num: number; 
   };
 };
 

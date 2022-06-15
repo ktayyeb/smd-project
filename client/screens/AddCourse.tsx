@@ -1,119 +1,115 @@
 import {
-  Image,
-  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
   View,
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
   ScrollView,
+  Alert,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import NavOptions from "../components/NavOptions";
-import { Card, Button, Icon } from "react-native-elements";
-import  axios from "axios";
-import ChooseDay from "../screens/ChooseDay";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import React, { useState, useEffect} from "react";
+import { Button } from "react-native-elements";
+import axios from "axios";
 
-const HomeScreen = () => {
-  const [search, setSearch] = useState("");
-  const [subject, setSubject] = useState<Subject[]>();
-  const [text, onChangeText] = useState("");
-//   const [, onChangeText] = React.useState("Useless Text");
-  const [courseID, setCourseID] = useState(""); 
-  const [creditHour, setCreditHour] = React.useState(null);
-  const [assignmentWeight, setAssignmentWeight] = React.useState(null);
-  const [assignmentBest, setAssignmentBest] = React.useState(null);
-  const [assignmentNumber, setAssignmentNumber] = React.useState(null);
+const AddCourse = () => {
+  const [courseName, setCourseName] = useState();
+  const [courseID, setCourseID] = useState();
+  const [creditHour, setCreditHour] = useState();
 
-  const [quizWeight, setQuizWeight] = React.useState(null);
-  const [quizBest, setQuizBest] = React.useState(null);
-  const [quizNumber, setQuizNumber] = React.useState(null);
+  const [assignmentWeight, setAssignmentWeight] = useState();
+  const [assignmentBest, setAssignmentBest] = useState();
+  const [assignmentNumber, setAssignmentNumber] = useState();
 
-  const [projectWeight, setProjectWeight] = React.useState(null);
-  const [projectBest, setProjectBest] = React.useState(null);
-  const [projectNumber, setProjectNumber] = React.useState(null);
+  const [quizWeight, setQuizWeight] = useState();
+  const [quizBest, setQuizBest] = useState();
+  const [quizNumber, setQuizNumber] = useState();
 
-  const [midtermWeight, setMidtermWeight] = React.useState(null);
-  const [midtermBest, setMidtermBest] = React.useState(null);
-  const [midtermNumber, setMidtermNumber] = React.useState(null);
+  const [projectWeight, setProjectWeight] = useState();
+  const [projectBest, setProjectBest] = useState();
+  const [projectNumber, setProjectNumber] = useState();
 
-  const [finalWeight, setFinalWeight] = React.useState(null);
-  const [finalBest, setFinalBest] = React.useState(null);
+  const [midtermWeight, setMidtermWeight] = useState();
+  const [midtermBest, setMidtermBest] = useState();
+  const [midtermNumber, setMidtermNumber] = useState();
 
-  const api = axios.create({
-    baseURL: `http://localhost:3000/courseWork`
-})
- 
- 
- const createCourse = async () =>{ 
-     console.log("ya khaled ya 3alamy")
-     let res = await api .post('/newCourse',{cid:Number(courseID)});
-     console.log(res); 
- }; 
-
-
- const handleClick = async () => {
-  
-  console.log("ay zeft");
-  console.log(courseID);
-  await axios.post('http://192.168.100.25:3000/courseWork/newCourse', { cid: Number(courseID)})
-  .then(response => console.log(response.data)).catch(error => console.log(error));
-};
-
-
- const handleId = (e: { target: { value: any; }; }) => {
-  setCourseID(e.target.value)
-  console.log(e.target.value)
-
- }
-
- 
+  const [finalWeight, setFinalWeight] = useState();
+  const [finalNumber, setFinalNumber] = useState();
 
 
 
+  const handleClick = async () => {
+    console.log("===============================================================================================================")
+    console.log(assignmentBest)
+    await axios
+      .post("http://192.168.100.11:3000/courseWork/newCourse", {
+        sid: 1500,
+        cid: Number(courseID),
+        title: courseName,
+        hours: Number(creditHour),
+        assignments: {
+          num: Number(assignmentNumber),
+          weight: Number(assignmentWeight),
+          best: Number(assignmentBest),
+        },
+        quizzes: {
+          num: Number(quizNumber),
+          weight: Number(quizWeight),
+          best: Number(quizBest),
+        },
+        midterms: {
+          num: Number(midtermNumber),
+          weight: Number(midtermWeight),
+          best: Number(midtermBest),
+        },
+        projects: {
+          num: Number(projectNumber),
+          weight: Number(projectWeight),
+          best: Number(projectBest),
+        },
 
-
-  const renderItem = ({ item }) => (
-    <Card>
-      <Card.Title style={{ flex: 1 }}>{item.time}</Card.Title>
-      <Card.Divider />
-
-      <Text style={{ marginBottom: 10 }}> {item.name} </Text>
-
-      <Card.Divider />
-      <Text style={{ marginBottom: 10 }}> {item.room} </Text>
-    </Card>
-  );
-
-  // (newCourseID: number) => {setCourseID(newCourseID); console.log(newCourseID)}
-
-  const navigation = useNavigation();
+        final: {
+          num: Number(finalNumber),
+          weight: Number(finalWeight),
+          best: Number(finalNumber),
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.message == undefined) {
+          alert("Course Created Successfully!");
+        } else {
+          alert("Please fill the missing!");
+        }
+      })
+      .catch((error) => console.log(error));
+  };
 
   return (
     <ScrollView style={styles.scrollView}>
       <View>
         <Text style={styles.setFontSizeOne}> Course Details </Text>
         <View style={{ flexDirection: "row", flex: 1 }}>
-            <TextInput
-            style={styles.input}
-            onChangeText={ (text: string) => setCourseID(text)}
-            value={courseID}
-            placeholder="useless placeholder"
-            keyboardType="numeric"
-            />
           <TextInput
             style={styles.input}
-            onChangeText={(text: string) => console.log(text)}
-            value={text}
+            onChangeText={(text: string) => setCourseName(text)}
+            value={courseName}
+            placeholder="Name"
+            placeholderTextColor="#E0E0E0"
           />
-
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
+            onChangeText={(text: string) => setCourseID(text)}
+            value={courseID}
+            placeholder="ID"
+            placeholderTextColor="#E0E0E0"
+            keyboardType="numeric"
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={(text: string) => setCreditHour(text)}
+            value={creditHour}
+            placeholder="Credit Hour"
+            placeholderTextColor="#E0E0E0"
+            keyboardType="numeric"
           />
         </View>
       </View>
@@ -123,20 +119,27 @@ const HomeScreen = () => {
         <View style={{ flexDirection: "row", flex: 1 }}>
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
+            onChangeText={(text: string) => setAssignmentWeight(text)}
+            value={assignmentWeight}
+            placeholder="Weight"
+            placeholderTextColor="#E0E0E0"
             keyboardType="numeric"
           />
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
+            onChangeText={(text: string) => setAssignmentBest(text)}
+            value={assignmentBest}
+            placeholder="Best of"
+            placeholderTextColor="#E0E0E0"
+            keyboardType="numeric"
           />
-
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
+            onChangeText={(text: string) => setAssignmentNumber(text)}
+            value={assignmentNumber}
+            placeholder="No. "
+            placeholderTextColor="#E0E0E0"
+            keyboardType="numeric"
           />
         </View>
       </View>
@@ -146,19 +149,27 @@ const HomeScreen = () => {
         <View style={{ flexDirection: "row", flex: 1 }}>
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
+            onChangeText={(text: string) => setQuizWeight(text)}
+            value={quizWeight}
+            placeholder="Weight"
+            placeholderTextColor="#E0E0E0"
+            keyboardType="numeric"
           />
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
+            onChangeText={(text: string) => setQuizBest(text)}
+            value={quizBest}
+            placeholder="Best of"
+            placeholderTextColor="#E0E0E0"
+            keyboardType="numeric"
           />
-
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
+            onChangeText={(text: string) => setQuizNumber(text)}
+            value={quizNumber}
+            placeholder="No."
+            placeholderTextColor="#E0E0E0"
+            keyboardType="numeric"
           />
         </View>
       </View>
@@ -168,19 +179,27 @@ const HomeScreen = () => {
         <View style={{ flexDirection: "row", flex: 1 }}>
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
+            onChangeText={(text: string) => setProjectWeight(text)}
+            value={projectWeight}
+            placeholder="Weight"
+            placeholderTextColor="#E0E0E0"
+            keyboardType="numeric"
           />
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
+            onChangeText={(text: string) => setProjectBest(text)}
+            value={projectBest}
+            placeholder="Best of"
+            placeholderTextColor="#E0E0E0"
+            keyboardType="numeric"
           />
-
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
+            onChangeText={(text: string) => setProjectNumber(text)}
+            value={projectNumber}
+            placeholder="No. "
+            placeholderTextColor="#E0E0E0"
+            keyboardType="numeric"
           />
         </View>
       </View>
@@ -190,8 +209,27 @@ const HomeScreen = () => {
         <View style={{ flexDirection: "row", flex: 1 }}>
           <TextInput
             style={styles.input}
-            onChangeText={onChangeText}
-            value={text}
+            onChangeText={(text: string) => setMidtermWeight(text)}
+            value={midtermWeight}
+            placeholder="Weight"
+            placeholderTextColor="#E0E0E0"
+            keyboardType="numeric"
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={(text: string) => setMidtermBest(text)}
+            value={midtermBest}
+            placeholder="Best of"
+            placeholderTextColor="#E0E0E0"
+            keyboardType="numeric"
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={(text: string) => setMidtermNumber(text)}
+            value={midtermNumber}
+            placeholder="No."
+            placeholderTextColor="#E0E0E0"
+            keyboardType="numeric"
           />
         </View>
 
@@ -200,37 +238,27 @@ const HomeScreen = () => {
           <View style={{ flexDirection: "row", flex: 1 }}>
             <TextInput
               style={styles.input}
-              onChangeText={onChangeText}
-              value={text}
+              onChangeText={(text: string) => setFinalWeight(text)}
+              value={finalWeight}
+              placeholder="Weight"
+              placeholderTextColor="#E0E0E0"
+              keyboardType="numeric"
+            />
+            <TextInput
+              style={styles.input}
+              onChangeText={(text: string) => setFinalNumber(text)}
+              value={finalNumber}
+              placeholder="No."
+              placeholderTextColor="#E0E0E0"
+              keyboardType="numeric"
             />
           </View>
         </View>
       </View>
 
-      <Button
-        title="Press me"
-        onPress={handleClick}
-      />
-
-
+      <Button title="Submit Course" onPress={handleClick} />
     </ScrollView>
   );
-
-  type RouteParams = {
-    term: string;
-  };
-
-  type RouteProps = {
-    params: RouteParams;
-    name: string;
-    key: string;
-  };
-
-  type Subject = {
-    name: string;
-    room: string;
-    time: string;
-  };
 };
 
 const styles = StyleSheet.create({
@@ -243,20 +271,18 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    width: 100,
+    width: 102,
     margin: 12,
     borderWidth: 1,
     padding: 10,
-    color: "white",
+    color: "#FFFFFF",
     backgroundColor: "#282828",
-    borderRadius: 20,
+    borderRadius: 10,
     borderColor: "#404040",
   },
   container: {
     flex: 1,
     justifyContent: "center",
-    // marginHorizontal: 16,
-    // alignItems: 'stretch',
   },
   title: {
     textAlign: "center",
@@ -316,4 +342,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default AddCourse;

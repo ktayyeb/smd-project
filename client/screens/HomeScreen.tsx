@@ -1,102 +1,92 @@
-import { Image, SafeAreaView, StyleSheet, Text, TextInput, View, FlatList} from 'react-native'
-import React, { useEffect, useState } from 'react'
-import NavOptions from '../components/NavOptions';
-import {  Card , Button, Icon } from "react-native-elements";
+import { StyleSheet, Text, View, FlatList, ImageBackground } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Card, Button } from "react-native-elements";
 import * as axios from "axios";
-import ChooseDay from '../screens/ChooseDay'
-import { useNavigation, useRoute } from "@react-navigation/native";
-
+import { useNavigation } from "@react-navigation/native";
+import { useFonts } from 'expo-font';
 
 var today = new Date();
-var day =  today.getDay()
-var dayNumber = today.getDate()
-var month = today.getMonth()
-var year = today.getFullYear()
+var day = today.getDay();
+var dayNumber = today.getDate();
+var month = today.getMonth();
+var year = today.getFullYear();
 
-console.log(day); 
-var Day = "Sunday"
+console.log(day);
+var Day = "Sunday";
 
-if(day === 0) {
-    Day = "Sunday"
+if (day === 0) {
+  Day = "Sunday";
+} else if (day === 1) {
+  Day = "Monday";
+} else if (day === 2) {
+  Day = "Tuesday";
+} else if (day === 3) {
+  Day = "Wednesday";
+} else if (day === 4) {
+  Day = "Thursday";
+} else if (day === 5) {
+  Day = "Friday";
+} else if (day === 6) {
+  Day = "Saturday";
 }
-else if (day === 1) {
-    Day = "Monday"
-}
-else if (day === 2) {
-    Day = "Tuesday"
-}
-else if (day === 3) {
-    Day = "Wednesday"
-}
-else if (day === 4) {
-    Day = "Thursday"
-}
-else if (day === 5) {
-    Day = "Friday"
-}
-else if (day === 6) {
-    Day = "Saturday"
-}
-
 
 const HomeScreen = () => {
-  const [search, setSearch] = useState('');
   const [subject, setSubject] = useState<Subject[]>();
 
   useEffect(() => {
-    Promise.all([
-      axios.default.get(`http://192.168.100.11:3000/${Day}/`),
-    ])
-      .then(([{ data: subjectsResults }]) => {
-        console.log("haaa" ,subjectsResults)
+    Promise.all([axios.default.get(`http://192.168.100.11:3000/${Day}/`)]).then(
+      ([{ data: subjectsResults }]) => {
+        console.log("haaa", subjectsResults);
         if (subjectsResults) setSubject(subjectsResults);
-      });
+      }
+    );
   }, []);
 
-
   const renderItem = ({ item }) => (
-    
     <Card>
-      <Card.Title style={{flex:1}}>{item.time}
-     
-      </Card.Title>
+      <Card.Title style={{ flex: 1 }}>{item.time}</Card.Title>
       <Card.Divider />
 
-      <Text style={{ marginBottom: 10,}}> {item.name}  </Text>
-     
+      <Text style={{ marginBottom: 10 }}> {item.name} </Text>
+
       <Card.Divider />
-      <Text style={{ marginBottom: 10,}}> {item.room}  </Text>
+      <Text style={{ marginBottom: 10 }}> {item.room} </Text>
     </Card>
-
-
   );
 
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
 
   return (
+    <ImageBackground source={require('../assets/Purple-Black-Abstract-4K-Phone-Wallpaper.jpg')} resizeMode="cover" style={styles.image}>
     <View style={styles.container}>
-      <View style={styles.space} /> 
-      <Text style= {styles.setFontSizeOne}>  {Day} {dayNumber}/{month}/{year}</Text>
-      <View style={styles.space} /> 
-      
-      <Button style={styles.buttonStyle}
-        onPress={() => {navigation.navigate('ChooseDay', {
-          });
-        }}
-        title="Check any day schedule"
-        color="#000000"
-      />
-       <View style={styles.space} /> 
-       <Button style={styles.buttonStyle}
-        onPress={() => {navigation.navigate('GPACalculator', {
-          });
-        }}
-        title="GPA Calculator"
-        color="#000000"
-      />
-       <View style={styles.space} /> 
+       
+      <View style={styles.space} />
+      <Text style={styles.setFontSizeOne}>
+        {" "}
+        {Day} {dayNumber}/{month}/{year}
+      </Text>
+      <View style={styles.space} />
 
-      <Text style= {styles.setFontSizeOne}>Schedule For Today</Text>
+      <Button
+        style={styles.buttonStyle}
+        onPress={() => {
+          navigation.navigate("ChooseDay", {});
+        }}
+        title="Check Schedule for any day"
+        color="#000000"
+      />
+      <View style={styles.space} />
+      <Button
+        style={styles.buttonStyle}
+        onPress={() => {
+          navigation.navigate("GPACalculator", {});
+        }}
+        title="GPA Calculator & Courses Grades"
+        color="#000000"
+      />
+      <View style={styles.space} />
+
+      <Text style={styles.setFontSizeOne}>Schedule For Today</Text>
 
       <FlatList
         data={subject}
@@ -105,28 +95,21 @@ const HomeScreen = () => {
       />
       
     </View>
+    </ImageBackground>
   );
 
-  type RouteParams = {
-    term: string;
-  };
-  
-  type RouteProps = {
-    params: RouteParams;
-    name: string;
-    key: string;
-  };
-  
   type Subject = {
     name: string;
     room: string;
-    time: string; 
+    time: string;
+  };
 };
-  
-}
-
 
 const styles = StyleSheet.create({
+  image: {
+    flex: 1,
+    justifyContent: "center"
+  },
   space: {
     width: 20, // or whatever size you need
     height: 20,
@@ -163,14 +146,15 @@ const styles = StyleSheet.create({
   tinyLogo: {
     width: 210,
     height: 70,
-    padding: 10, 
+    padding: 10,
   },
   buttonStyle: {
-    width: '100%',
-    height: '30%',
-    justifyContent: 'center',
-    alignItems: 'center'
- },
+    width: "100%",
+    height: "30%",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 100, 
+  },
   view: {
     margin: 10,
   },
@@ -184,25 +168,27 @@ const styles = StyleSheet.create({
     margin: 5,
     height: 25,
     width: 25,
-    resizeMode : 'stretch',
-    alignItems: 'center'
-},
-searchInput: {
-  width: 300,
-  height: 40,
-  backgroundColor: '#fff',
-  paddingVertical: 10,
-  paddingHorizontal: 15,
-  borderColor: '#ccc',
-  borderWidth: 1,
-  borderRadius: 15,
-  fontSize: 16,
-  padding: 10, 
-},
-setFontSizeOne: {
-  fontSize: 30, // Define font size here in Pixels
-  left:0,
-},
+    resizeMode: "stretch",
+    alignItems: "center",
+  },
+  searchInput: {
+    width: 300,
+    height: 40,
+    backgroundColor: "#fff",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 15,
+    fontSize: 16,
+    padding: 10,
+  },
+  setFontSizeOne: {
+    fontSize: 30, // Define font size here in Pixels
+    left: 0,
+    color: '#FFFFFF',
+    fontFamily: 'sans-serif-medium'
+  },
 });
 
-export default HomeScreen
+export default HomeScreen;

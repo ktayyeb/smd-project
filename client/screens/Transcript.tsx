@@ -1,7 +1,7 @@
 import { useRoute } from "@react-navigation/native";
 import * as axios from "axios";
 import React, { ReactNode, useEffect, useRef, useState } from "react";
-import { View,  StyleSheet, Image, FlatList, Alert } from "react-native";
+import { View, StyleSheet, Image, FlatList, Alert } from "react-native";
 import { Text, Card } from "react-native-elements";
 import { white } from "react-native-paper/lib/typescript/styles/colors";
 
