@@ -174,10 +174,9 @@ router.post('/finalGrade',async (req,res)=>{
   if(courseInfo.assignments.completed<courseInfo.assignments.num || 
     courseInfo.quizzes.completed<courseInfo.quizzes.num ||
     courseInfo.midterms.completed<courseInfo.midterms.num ||
-    courseInfo.projects.completed<courseInfo.projects.num ||
-    courseInfo.final.completed<courseInfo.final.num
+    courseInfo.projects.completed<courseInfo.projects.num
     ){
-    res.send({message:"You inserted all of your assessments here!"});
+    res.send({message:"Please complete filling your course work"});
     
   }
 
@@ -235,9 +234,14 @@ router.get('/gpa/:sid',async(req,res)=>{
 
   let gpa = await GPA.find({sid:req.params.sid})
   console.log(gpa);
-  if(gpa.length===0)   
+  
+  if(gpa.length!=0){
+    GPA.remove({sid:req.params.sid})
+  }
 
-  {
+  
+
+  
 
     let grades = await FinalGrade.find({sid:req.params.sid})
 
@@ -275,12 +279,9 @@ router.get('/gpa/:sid',async(req,res)=>{
 
 
 
-  }
-
-  else{
-    res.send(gpa);
   
-}
+
+  
 
 });
 
