@@ -6,6 +6,7 @@ import Add_Course from "./screens/AddCourse";
 import CourseGrades from "./screens/CourseGrades";
 import Transcript from "./screens/Transcript"
 import Grades from "./screens/Grades";
+import GPA from "./screens/GPA"
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -77,6 +78,14 @@ const App = () => (
         options={{
           headerShown: true,
           title: "Transcript",
+        }}
+      />
+       <Stack.Screen
+        name="GPA"
+        component={GPA}
+        options={{
+          headerShown: true,
+          title: "GPA",
         }}
       />
     </Stack.Navigator>
