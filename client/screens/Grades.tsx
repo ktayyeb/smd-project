@@ -19,19 +19,19 @@ const ListScreen2 = () => {
   const { type } = route.params;
   const [subject, setSubject] = useState<Subject[]>();
 
-  var Type = "";
+//   var Type = "";
 
-  if (type === 0) {
-    Type = "Assignment Grades";
-  } else if (type === 1) {
-    Type = "Quiz Grades";
-  } else if (type === 2) {
-    Type = "Midterm Grades";
-  } else if (type === 3) {
-    Type = "Project Grades";
-  } else if (type === 4) {
-    Type = "Final Grades";
-  }
+//   if (type === 0) {
+//     Type = "Assignment Grades";
+//   } else if (type === 1) {
+//     Type = "Quiz Grades";
+//   } else if (type === 2) {
+//     Type = "Midterm Grades";
+//   } else if (type === 3) {
+//     Type = "Project Grades";
+//   } else if (type === 4) {
+//     Type = "Final Grades";
+//   }
 
   useEffect(() => {
     Promise.all([
@@ -39,20 +39,18 @@ const ListScreen2 = () => {
         `http://192.168.100.11:3000/courseWork/assessments/${sid}/${cid}/${type}`
       ),
     ]).then(([{ data: subjectsResults }]) => {
-     
       if (subjectsResults) setSubject(subjectsResults);
     });
   }, []);
 
-
   const renderItem = ({ item }) => (
     <Card style={{ flex: 1, width: 100 }}>
-      <Card.Title style={{ flex: 1 }}> Assignment {item.num}</Card.Title>
+      <Card.Title style={{ flex: 1 }}> Type {item.num}</Card.Title>
       <Card.Divider />
 
       <Text style={{ marginBottom: 10 }}>
-        {" "}
-        {item.grade} / {item.totalGrade}{" "}
+      
+        {item.grade} / {item.totalGrade}
       </Text>
     </Card>
   );
@@ -65,7 +63,7 @@ const ListScreen2 = () => {
     >
       <View style={styles.container}>
         <View style={styles.space} />
-        <Text style={styles.setFontSizeOne}> {Type} </Text>
+        {/* <Text style={styles.setFontSizeOne}> {Type} </Text> */}
         <View style={styles.space} />
 
         <FlatList
@@ -73,12 +71,15 @@ const ListScreen2 = () => {
           renderItem={renderItem}
           keyExtractor={(item) => item.name}
         />
-      </View>
-    </ImageBackground>
+     </View>
+  </ImageBackground>
   );
 
   type RouteParams = {
-    term: string;
+    sid: string;
+    cid: string; 
+    type: string; 
+
   };
 
   type RouteProps = {
@@ -94,6 +95,12 @@ const ListScreen2 = () => {
     grade: number;
     totalGrade: number;
     num: number;
+    best: number; 
+    type: number; 
+    totalNum: number; 
+    weight: number; 
+    __v: number; 
+
   };
 };
 

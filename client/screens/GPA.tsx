@@ -1,49 +1,36 @@
 import { useRoute } from "@react-navigation/native";
 import * as axios from "axios";
 import React, { ReactNode, useEffect, useRef, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
-import {
-  View,
-  StyleSheet,
-  Image,
-  FlatList,
-  Alert,
-  ImageBackground,
-  Button,
-} from "react-native";
+import { View,  StyleSheet, Image, FlatList, Alert, ImageBackground } from "react-native";
 import { Text, Card } from "react-native-elements";
 import { white } from "react-native-paper/lib/typescript/styles/colors";
-import GPA from '../screens/GPA'
 
 const ListScreen2 = () => {
   const route = useRoute<RouteProps>();
   const { sid } = route.params;
   const [subject, setSubject] = useState<Subject[]>();
-  const navigation = useNavigation();
 
   useEffect(() => {
     Promise.all([
-      axios.default.get(
-        `http://192.168.100.11:3000/courseWork/allScores/${sid}/`
-      ),
+      axios.default.get(`http://192.168.100.11:3000/courseWork/gpa/${sid}/`),
     ]).then(([{ data: subjectsResults }]) => {
       console.log("haaa", subjectsResults);
       if (subjectsResults) setSubject(subjectsResults);
     });
   }, []);
 
+  console.log(sid)
+
   const renderItem = ({ item }) => (
     <Card style={{ flex: 1, width: 100 }}>
-      <Card.Title style={{ flex: 1 }}>{item.title}</Card.Title>
+        <Card.Title style={{ flex: 1 }}>Student ID: {item.sid}</Card.Title>
+      <Card.Divider />
+      <Card.Title style={{ flex: 1 }}>GPA: {item.gpa}</Card.Title>
       <Card.Divider />
 
-      <Text style={{ marginBottom: 10 }}>Credit Hours: {item.hours} </Text>
+      <Text style={{ marginBottom: 10 }}>GPA Letter:  {item.gpaLetter} </Text>
 
-      <Card.Divider />
-      <Text style={{ marginBottom: 10 }}>Result: {item.result} </Text>
-
-      <Card.Divider />
-      <Text style={{ marginBottom: 10 }}>Numeric Grade: {item.numeric} </Text>
+     
     </Card>
   );
 
@@ -53,30 +40,17 @@ const ListScreen2 = () => {
       resizeMode="cover"
       style={styles.image}
     >
-      <View style={styles.container}>
-        <View style={styles.space} />
-      
-        <View style={styles.space} />
+    <View style={styles.container}>
+      <View style={styles.space} />
+     
+      <View style={styles.space} />
 
-        <FlatList
-          data={subject}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.name}
-        />
-        
-        <View style={styles.space} />
-
-        <Button
-          onPress={() => {
-            navigation.navigate("GPA", {
-              sid: "5555",
-            });
-          }}
-          title="Get GPA"
-          color="#0096FF"
-          
-        />
-      </View>
+      <FlatList
+        data={subject}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.name}
+      />
+    </View>
     </ImageBackground>
   );
 
@@ -91,10 +65,9 @@ const ListScreen2 = () => {
   };
 
   type Subject = {
-    title: string;
-    hours: number;
-    result: string;
-    numeric: number;
+    sid: number;
+    gpa: number;
+    gpaLetter: string;
   };
 };
 

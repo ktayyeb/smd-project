@@ -31,23 +31,23 @@ const AddCourse = () => {
     "D-",
   ];
 
-  const handleGrade = async () => {
-    console.log(gpaGrade);
-    await axios
-      .post("http://192.168.100.11:3000/courseWork/newCourse", {
-        sid: 5555,
-        Grade: Number(gpaGrade),
-      })
-      .then((response) => {
-        console.log(response.data);
-        if (response.data.message == undefined) {
-          alert("Grade Submitted!");
-        } else {
-          alert("Please Choose a Grade!");
-        }
-      })
-      .catch((error) => console.log(error));
-  };
+  // const handleGrade = async () => {
+  //   console.log(gpaGrade);
+  //   await axios
+  //     .post("http://192.168.100.11:3000/courseWork/newCourse", {
+  //       sid: 5555,
+  //       Grade: Number(gpaGrade),
+  //     })
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       if (response.data.message == undefined) {
+  //         alert("Grade Submitted!");
+  //       } else {
+  //         alert("Please Choose a Grade!");
+  //       }
+  //     })
+  //     .catch((error) => console.log(error));
+  // };
 
   const [gpaGrade, setGPAGrade] = useState("");
 
@@ -412,22 +412,7 @@ const AddCourse = () => {
           />
         </View>
         <View style={styles.space} />
-        <Text style={styles.setFontSizeOne}> Add Final Grade </Text>
-
-        <SelectDropdown
-          data={Grades}
-          onSelect={(selectedItem, index) => {
-            console.log(selectedItem, index);
-          }}
-          buttonTextAfterSelection={(selectedItem, index) => {
-            setGPAGrade(selectedItem);
-            // text represented after item is selected
-            // if data array is an array of objects then return selectedItem.property to render after item is selected
-            return selectedItem;
-          }}
-        />
-
-        <Button title="Add Grade" color="#000000" onPress={handleGrade} />
+      
       </ScrollView>
     </>
   );

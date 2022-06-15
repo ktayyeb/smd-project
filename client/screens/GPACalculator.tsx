@@ -116,7 +116,7 @@ const GPACalculator = () => {
       <Button
         onPress={() => {
           navigation.navigate("Transcript", {
-            term: "Saturday",
+            sid: "5555",
           });
         }}
         title="Go To Transcript"
