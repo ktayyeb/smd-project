@@ -246,12 +246,8 @@ router.get('/gpa/:sid',async(req,res)=>{
   }
 
   else{
-    
-    
+    gpa.then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
   
-
-
-
 }
 
 });
