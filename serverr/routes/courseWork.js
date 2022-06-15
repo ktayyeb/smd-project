@@ -63,6 +63,7 @@ router.post('/assessment',async(req,res)=>{
   const assessmentInfo = Type===0?courseInfo.assignments:Type===1?courseInfo.quizzes:Type===2?courseInfo.midterms:Type===3?courseInfo.projects:courseInfo.final;
   console.log(courseInfo);
   console.log(assessmentInfo);
+
   //console.log(assessmentInfo);
   //console.log(course);
 
@@ -166,6 +167,9 @@ router.post('/finalGrade',async (req,res)=>{
   
   let numericScore = await Numeric.findOne({result:req.body.result});
   const finalGrade= await FinalGrade.findOne({sid:req.body.sid,cid:req.body.cid});
+
+  //const courseInfo = await Weights.findOne({sid:req.body.sid,cid:req.body.cid});
+  //if(courseInfo.assignments.complted>=)
 
   if(finalGrade!=null){res.send({message:"this course has been added before"});}
   //console.log('numeric',numericScore);
@@ -271,6 +275,7 @@ router.get('/allScores/:sid',(req,res)=>{
 });
 
 
+
 //posts the neumerical final grade the student gets in a course
 /*router.post('/finalGrades',async(req,res)=>{
 
@@ -336,9 +341,18 @@ router.get('/allScores/:sid',(req,res)=>{
 
 //endpoint to get the best percentage a student can get out of an assessment(quizzes,assignments,etc)
 router.get('/bests/:sid/:cid/:type',async(req,res)=>{
+  const courseInfo = await Weights.findOne({sid:req.params.sid,cid:req.params.cid});
+
+  const Type = Number(req.params.type);
+
   
-  const result = await getBest(req.params.sid,req.params.cid,req.params.type);
-  res.send({"Assignments":result})
+  console.log('type:',Number(Type)===3);
+
+  const assessmentInfo = Type===0?courseInfo.assignments:Type===1?courseInfo.quizzes:Type===2?courseInfo.midterms:Type===3?courseInfo.projects:courseInfo.final;
+  console.log(assessmentInfo);
+
+  //const result = await getBest(req.params.sid,req.params.cid,req.params.type,assessmentInfo.best);
+  res.send({performance:assessmentInfo.results})
   
   
 
