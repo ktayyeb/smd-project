@@ -91,7 +91,7 @@ router.post('/assessment',async(req,res)=>{
 
   //Assessment.create(req.body).then((a)=> {res.send(a)}).catch((e)=>{console.log(e);});
   }
-  
+
 });
 
 
@@ -132,8 +132,19 @@ else{
 
 //posts a new course
 router.post('/newCourse',(req,res)=>{
+  const courseInfo1 = await Weights.find({sid:req.body.sid,cid:req.body.cid});
+  const courseInfo2 = await Weights.find({sid:req.body.sid,title:req.body.title});
+
+
+  if(courseInfo1.length===0||courseInfo2.length===0){
+    res.send({message:"this course has been added before"});
+    //return;
+  }
+
+
+else{
   Weights.create(req.body).then((a)=> {res.send(a);} ).catch((e)=>{res.send(e)});
-  
+}
 });
 
 router.get('/allCourses/:sid',(req,res)=>{
@@ -148,18 +159,24 @@ router.post('/numerics',(req,res)=>{
 
 router.post('/finalGrade',async (req,res)=>{
   
-  let numericScore = await Numeric.findOne({result:req.body.result})
-  console.log('numeric',numericScore);
+  let numericScore = await Numeric.findOne({result:req.body.result});
+  const finalGrade= await FinalGrade.findOne({sid:req.body.sid,cid:req.body.cid});
+
+  if(finalGrade==null){res.send({message:"this course has been added before"});}
+  //console.log('numeric',numericScore);
+  else{
   numericScore=numericScore.numeric
-  console.log('numeric',numericScore);
+  //console.log('numeric',numericScore);
 
   let hrs= await Weights.findOne({sid:req.body.sid,cid:req.body.cid})
-  console.log('weight',hrs);
+  //console.log('weight',hrs);
   hrs=hrs.hours
-  console.log('hrs',hrs);
+  //console.log('hrs',hrs);
 
-  console.log('numericScore:',numericScore);
-  console.log('hours:',hrs);
+  //console.log('numericScore:',numericScore);
+  //console.log('hours:',hrs);
+
+
   FinalGrade.create({
     sid:req.body.sid,
 
@@ -172,6 +189,13 @@ router.post('/finalGrade',async (req,res)=>{
     numeric:numericScore
     
   }).then((a)=> {res.send(a)}).catch((e)=>{res.send(e)});
+
+  }
+
+});
+
+router.get('/assessments/:sid/:cid/:type',async(req,res)=>{
+  Assessment.find({sid:req.params.sid,cid:req.params.cid,type:req.params.type},{title:1,num:1,grade:1,toalGrade:1}).sort({num:-1}).then((assessments)=> {res.send(assessments);} ).catch((e)=>{res.send(e)});
 
 });
 
