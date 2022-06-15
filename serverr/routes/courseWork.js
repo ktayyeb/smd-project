@@ -208,6 +208,11 @@ router.get('/assessments/:sid/:cid/:type',(req,res)=>{
 
 });
 
+router.get('/allExams/:sid/:cid/:type',async(req,res)=>{
+  Assessment.find({sid:req.params.sid,cid:req.params.cid,type:req.params.type},{title:1,num:1,grade:1,totalGrade:1}).then((courses)=> {res.send(courses);} ).catch((e)=>{res.send(e)});
+
+});
+
 router.get('/gpa/:sid',async(req,res)=>{
 
   let gpa = await GPA.find({sid:req.params.sid})
