@@ -216,7 +216,7 @@ router.post('/finalGrade',async (req,res)=>{
 
 
   let finalExamGrade=await updateFinalExam(req.body.sid,req.body.cid);
-  await Assessment.create({
+   await Assessment.create({
     sid:req.body.sid,
     cid:req.body.cid,
     title:Title,
@@ -230,7 +230,7 @@ router.post('/finalGrade',async (req,res)=>{
     
   })
 
-  const update= await updateWeight(req.body.sid,req.body.cid,Type,assessmentInfo);
+  const update= await updateWeight(req.body.sid,req.body.cid,Type,courseInfo.final);
   console.log('update',update);
 
   }
