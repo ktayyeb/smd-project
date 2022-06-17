@@ -27,11 +27,11 @@ const weightsSchema = new Schema({
     },
 
     assignments:{
-        num:{type:Number,required:true},
-        weight:{type:Number,required:true},
-        best:{type:Number,required:true},
-        completed:{type:Number,default:0},
-        results:{type:Number,default:0},
+        num:{type:Number,required:true},    //how many assignments the student will take.
+        weight:{type:Number,required:true}, //the weight of the assignments.
+        best:{type:Number,required:true},   //how many assignments will be counted.
+        completed:{type:Number,default:0},  //how many assignments the user provided at this point.
+        results:{type:Number,default:0},    //the performance of the user in the assignments at this point.
     },
 
     quizzes:{

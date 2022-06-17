@@ -61,15 +61,6 @@ app.get('/Saturday', function (req, res) {
 });
 
 
-
-
-
-// app.get('/Schedule/:day', function(req, res) {
-//   const { day } = req.params;
-//   return res.send(Schedule[day].toUpperCase());
-// });
-
-
 app.listen(3000, function() {
   console.log("[OK] = HTTP Server listening on: http://localhost:3000");
 });
