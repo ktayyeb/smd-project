@@ -44,7 +44,7 @@ const ListScreen2 = () => {
   useEffect(() => {
     Promise.all([
       axios.default.get(
-        `http://192.168.113.185:3000/courseWork/allExams/${sid}/${cid}/${type}`
+        `http://192.168.100.25:3000/courseWork/allExams/${sid}/${cid}/${type}`
       ),
     ]).then(([{ data: subjectsResults }]) => {
       console.log("haaa", subjectsResults);

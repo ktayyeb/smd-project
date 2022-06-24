@@ -34,7 +34,7 @@ const AddCourse = () => {
   // const handleGrade = async () => {
   //   console.log(gpaGrade);
   //   await axios
-  //     .post("http://192.168.113.185:3000/courseWork/newCourse", {
+  //     .post("http://192.168.100.25:3000/courseWork/newCourse", {
   //       sid: 5555,
   //       Grade: Number(gpaGrade),
   //     })
@@ -72,9 +72,10 @@ const AddCourse = () => {
   const { term } = route.params;
   const { id } = route.params;
   const [subject, setSubject] = useState<Subject[]>();
+  
 
   useEffect(() => {
-    Promise.all([axios.get(`http://192.168.113.185:3000/${term}/`)]).then(
+    Promise.all([axios.get(`http://192.168.100.25:3000/${term}/`)]).then(
       ([{ data: subjectsResults }]) => {
         if (subjectsResults) setSubject(subjectsResults);
       }
@@ -83,24 +84,30 @@ const AddCourse = () => {
 
   useEffect(() => {
     Promise.all([
-      axios.get(`http://192.168.113.185:3000/courseWork/allCourses/5555/`),
+      axios.get(`http://192.168.100.25:3000/courseWork/allCourses/5555/`),
     ]).then(([{ data: subjectsResults }]) => {
       if (subjectsResults) setSubject(subjectsResults);
     });
   }, []);
 
   useEffect(() => {
-    Promise.all([axios.get(`http://192.168.113.185:3000/${id}/`)]).then(
+    Promise.all([axios.get(`http://192.168.100.25:3000/${id}/`)]).then(
       ([{ data: subjectsResults }]) => {
         if (subjectsResults) setSubject(subjectsResults);
       }
     );
   }, []);
 
+  
+
+  
+
+
+
   const handleAssignment = async () => {
     console.log(assignmentTotalGrade);
     await axios
-      .post("http://192.168.113.185:3000/courseWork/assessment", {
+      .post("http://192.168.100.25:3000/courseWork/assessment", {
         sid: 5555,
         cid: id,
         grade: Number(assignmentGrade),
@@ -125,7 +132,7 @@ const AddCourse = () => {
   const handleQuiz = async () => {
     console.log(assignmentTotalGrade);
     await axios
-      .post("http://192.168.113.185:3000/courseWork/assessment", {
+      .post("http://192.168.100.25:3000/courseWork/assessment", {
         sid: 5555,
         cid: id,
         grade: Number(quizGrade),
@@ -150,7 +157,7 @@ const AddCourse = () => {
   const handleProject = async () => {
     console.log(assignmentTotalGrade);
     await axios
-      .post("http://192.168.113.185:3000/courseWork/assessment", {
+      .post("http://192.168.100.25:3000/courseWork/assessment", {
         sid: 5555,
         cid: id,
         grade: Number(projectGrade),
@@ -175,7 +182,7 @@ const AddCourse = () => {
   const handleMidterm = async () => {
     console.log(assignmentTotalGrade);
     await axios
-      .post("http://192.168.113.185:3000/courseWork/assessment", {
+      .post("http://192.168.100.25:3000/courseWork/assessment", {
         sid: 5555,
         cid: id,
         grade: Number(midtermGrade),
@@ -200,7 +207,7 @@ const AddCourse = () => {
   const handleFinal = async () => {
     console.log(assignmentTotalGrade);
     await axios
-      .post("http://192.168.113.185:3000/courseWork/assessment", {
+      .post("http://192.168.100.25:3000/courseWork/assessment", {
         sid: 5555,
         cid: id,
         grade: Number(finalGrade),
@@ -225,7 +232,7 @@ const AddCourse = () => {
   const handleGradeObtainted = async () => {
     console.log(gradeObtained);
     await axios
-      .post("http://192.168.113.185:3000/courseWork/finalGrade", {
+      .post("http://192.168.100.25:3000/courseWork/finalGrade", {
         sid: 5555,
         cid: id,
         result: gradeObtained,
@@ -246,14 +253,10 @@ const AddCourse = () => {
   };
 
   const renderItem = ({ item }) => (
-    <Card>
-      <Card.Title style={{ flex: 1 }}>{item.time}</Card.Title>
-      <Card.Divider />
-
-      <Text style={{ marginBottom: 10 }}> {item.name} </Text>
-
-      <Card.Divider />
-      <Text style={{ marginBottom: 10 }}> {item.room} </Text>
+    <Card style={{ flex: 1, width: 100 }}>
+      <Card.Title style={{ flex: 1 }}>
+        Overall Performance: {item.total}%
+      </Card.Title>
     </Card>
   );
 
@@ -449,6 +452,37 @@ const AddCourse = () => {
           />
           <View style={styles.space} />
         </View>
+        
+        <View>
+          <Text style={styles.setFontSizeOne}> Overall Performance </Text>
+          <View style={styles.space} />
+        </View>
+        <Button
+            style={styles.smallButton}
+            title="Check Overall performance"
+            onPress={() => {
+              navigation.navigate("OverallPerformance", {
+                sid: "5555",
+                cid: id,
+              });
+            }}
+          />
+
+      <View>
+          <Text style={styles.setFontSizeOne}> final Grade Predictions </Text>
+          <View style={styles.space} />
+        </View>
+        <Button
+            style={styles.smallButton}
+            title="Check Predictions"
+            onPress={() => {
+              navigation.navigate("Predictions", {
+                sid: "5555",
+                cid: id,
+              });
+            }}
+          />
+
         <View style={styles.space} />
       </ScrollView>
     </>
@@ -469,6 +503,8 @@ const AddCourse = () => {
     cid: number;
     title: string;
   };
+
+  
 };
 
 const styles = StyleSheet.create({

@@ -10,9 +10,41 @@ const Numeric=require('../models/numeric')
 //calculate the best percentage a student can get out of an assessment(quizzes,assignments,etc).
 async function getBest(Sid,Cid, Type,Best) {
   
-  let arr =  await Assessment.find({ sid:Sid, cid: Cid, type: Type })
-                            .sort({grade:-1})
-                            .limit(Best);
+  let arr =  await Assessment.find({ sid:Sid, cid: Cid, type: Type });
+
+  let x=[]
+
+  for(let i=0;arr.length>i;i++){
+    x.push({index:i,ratio:arr[i].grade/arr[i].totalGrade,num:arr[i].num});
+
+  }
+  
+  x.sort((a, b) => a.ratio - b.ratio);
+
+  for(let j=0;Best>j;j++){
+    x.pop();
+  }
+
+
+
+  //let remove=x.splice(0, arr.length-Best);
+
+  console.log('x',x);
+  //console.log('remove',remove);
+
+  for(let i=0;x.length>i;i++){
+
+    for(let j=0;arr.length>j;j++){
+      if(x[i].num===arr[j].num){
+
+        arr.splice(j,1);
+        console.log('array now',arr);
+      }    
+  }
+
+  }
+
+  console.log('array',arr);
 
   let score = 0;
   let total = 0;
@@ -293,9 +325,81 @@ router.get('/allScores/:sid',(req,res)=>{
 async function updateFinalExam(Sid,Cid){
   const courseInfo = await Weights.findOne({sid:Sid,cid:Cid});
 
+  let finalGrade= await FinalGrade.findOne({sid:Sid,cid:Cid});
+  finalGrade=finalGrade.numeric;
+  
+
+  
+  let sum = courseInfo.assignments.results+courseInfo.quizzes.results+courseInfo.midterms.results+courseInfo.projects.results;
+
+  let maxGrade=sum+courseInfo.final.weight
+
+
+
+
+  
+
   return 100-courseInfo.assignments.results-courseInfo.quizzes.results-courseInfo.midterms.results-courseInfo.projects.results;
 
 }
+
+router.get('/overallPerformance/:sid/:cid',async(req,res)=>{
+
+  const courseInfo = await Weights.findOne({sid:req.params.sid,cid:req.params.cid});
+
+  let sum=courseInfo.assignments.results+courseInfo.quizzes.results+courseInfo.midterms.results+courseInfo.projects.results+courseInfo.final.results;
+
+  res.send([{total:sum}]);
+  
+  
+});
+
+function round(value, precision) {
+  var multiplier = Math.pow(10, precision || 0);
+  return Math.round(value * multiplier) / multiplier;
+}
+
+router.get('/maxFinal/:sid/:cid',async(req,res)=>{
+
+  const courseInfo = await Weights.findOne({sid:req.params.sid,cid:req.params.cid});
+  const gradingScheme= await Numeric.find().sort({numeric:1});
+
+
+  let sum=courseInfo.assignments.results+courseInfo.quizzes.results+courseInfo.midterms.results+courseInfo.projects.results;
+
+  let finalWeight=courseInfo.final.weight;
+
+  let arr=[];
+
+  for (let i = 0; i < gradingScheme.length; i++) {
+    let percentage=gradingScheme[i].percent;
+
+    let x=sum+finalWeight;
+
+    console.log('x',x);
+    console.log('percentage',percentage);
+
+    if(x<percentage){
+      continue;
+
+    }
+
+    else if((percentage-sum)/finalWeight*100<0){
+      continue;
+    }
+
+    else{
+
+    arr.push({letter:gradingScheme[i].result,percent:round((percentage-sum)/finalWeight*100,1)});
+    }
+    
+  }
+  res.send(arr);
+  
+  
+});
+
+
 
 
 //endpoint to get the best percentage a student can get out of an assessment from the course info(model:Weights)(quizzes,assignments,etc)

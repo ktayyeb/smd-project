@@ -8,7 +8,10 @@ import Transcript from "./screens/Transcript"
 import Grades from "./screens/Grades";
 import GPA from "./screens/GPA"
 import Performance from "./screens/Performance"
+import OverallPerformance from "./screens/overallPerformance"
+import Predictions from "./screens/Predictions"
 import React from "react";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -95,6 +98,22 @@ const App = () => (
         options={{
           headerShown: true,
           title: "Performance",
+        }}
+      />
+      <Stack.Screen
+        name="OverallPerformance"
+        component={OverallPerformance}
+        options={{
+          headerShown: true,
+          title: "OverallPerformance",
+        }}
+      />
+      <Stack.Screen
+        name="Predictions"
+        component={Predictions}
+        options={{
+          headerShown: true,
+          title: "Predictions",
         }}
       />
     </Stack.Navigator>

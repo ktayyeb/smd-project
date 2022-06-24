@@ -16,38 +16,29 @@ const ListScreen2 = () => {
   const route = useRoute<RouteProps>();
   const { sid } = route.params;
   const { cid } = route.params;
-  const { type } = route.params;
-  const [subject, setSubject] = useState<Subject[]>();
-  var Type = "";
-  if (type === 0) {
-    Type = "Assignment";
-  } else if (type === 1) {
-    Type = "Quiz";
-  } else if (type === 2) {
-    Type = "Midterm";
-  } else if (type === 3) {
-    Type = "Project";
-  } else if (type === 4) {
-    Type = "Final";
-  }
+  
+  const [overall, setOverall] = useState<Overall[]>();
+  
 
   useEffect(() => {
     Promise.all([
-      axios.default.get(
-        `http://192.168.100.25:3000/courseWork/bests/${sid}/${cid}/${type}`
-      ),
-    ]).then(([{ data: subjectsResults }]) => {
-      console.log("haaa", subjectsResults);
-      if (subjectsResults) setSubject(subjectsResults);
+      axios.get(`http://192.168.100.25:3000/courseWork/overallPerformance/5555/${cid}/`),
+    ]).then(([{ data: overallResults }]) => {
+        console.log(overall);
+      if (overallResults) setOverall(overallResults);
     });
   }, []);
 
+
+
   console.log(sid);
+
+  console.log(overall);
 
   const renderItem = ({ item }) => (
     <Card style={{ flex: 1, width: 100 }}>
       <Card.Title style={{ flex: 1 }}>
-        Performance: {item.performance}%
+        Overall Performance: {item.total}%
       </Card.Title>
     </Card>
   );
@@ -59,13 +50,13 @@ const ListScreen2 = () => {
       style={styles.image}
     >
       <View style={styles.container}>
-        <Text style={styles.setFontSizeOne}> {Type} Performance </Text>
+        <Text style={styles.setFontSizeOne}> Overall Performance </Text>
         <View style={styles.space} />
 
         <View style={styles.space} />
 
         <FlatList
-          data={subject}
+          data={overall}
           renderItem={renderItem}
           keyExtractor={(item) => item.name}
         />
@@ -76,7 +67,7 @@ const ListScreen2 = () => {
   type RouteParams = {
     sid: string;
     cid: string;
-    type: number;
+    
   };
 
   type RouteProps = {
@@ -85,8 +76,8 @@ const ListScreen2 = () => {
     key: string;
   };
 
-  type Subject = {
-    performance: number;
+  type Overall = {
+    total: number;
   };
 };
 

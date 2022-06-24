@@ -1,6 +1,7 @@
 import { useRoute } from "@react-navigation/native";
 import * as axios from "axios";
 import React, { ReactNode, useEffect, useRef, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   View,
   StyleSheet,
@@ -8,33 +9,28 @@ import {
   FlatList,
   Alert,
   ImageBackground,
+  Button,
 } from "react-native";
 import { Text, Card } from "react-native-elements";
 import { white } from "react-native-paper/lib/typescript/styles/colors";
+import Performance from "../screens/Performance";
 
 const ListScreen2 = () => {
   const route = useRoute<RouteProps>();
   const { sid } = route.params;
   const { cid } = route.params;
-  const { type } = route.params;
+  
   const [subject, setSubject] = useState<Subject[]>();
-  var Type = "";
-  if (type === 0) {
-    Type = "Assignment";
-  } else if (type === 1) {
-    Type = "Quiz";
-  } else if (type === 2) {
-    Type = "Midterm";
-  } else if (type === 3) {
-    Type = "Project";
-  } else if (type === 4) {
-    Type = "Final";
-  }
+  const navigation = useNavigation();
+  
+  console.log(sid);
+  console.log(cid);
+  
 
   useEffect(() => {
     Promise.all([
       axios.default.get(
-        `http://192.168.100.25:3000/courseWork/bests/${sid}/${cid}/${type}`
+        `http://192.168.100.25:3000/courseWork/maxFinal/${sid}/${cid}/`
       ),
     ]).then(([{ data: subjectsResults }]) => {
       console.log("haaa", subjectsResults);
@@ -42,13 +38,17 @@ const ListScreen2 = () => {
     });
   }, []);
 
-  console.log(sid);
-
   const renderItem = ({ item }) => (
     <Card style={{ flex: 1, width: 100 }}>
       <Card.Title style={{ flex: 1 }}>
-        Performance: {item.performance}%
+        To get {item.letter} you need:
       </Card.Title>
+      <Card.Divider />
+
+      <Text style={{ marginBottom: 10 }}>
+        {item.percent}% of the final exam
+      </Text>
+
     </Card>
   );
 
@@ -58,10 +58,8 @@ const ListScreen2 = () => {
       resizeMode="cover"
       style={styles.image}
     >
+      <Text style={styles.setFontSizeOne}> Predictions </Text>
       <View style={styles.container}>
-        <Text style={styles.setFontSizeOne}> {Type} Performance </Text>
-        <View style={styles.space} />
-
         <View style={styles.space} />
 
         <FlatList
@@ -69,6 +67,8 @@ const ListScreen2 = () => {
           renderItem={renderItem}
           keyExtractor={(item) => item.name}
         />
+
+        
       </View>
     </ImageBackground>
   );
@@ -76,7 +76,7 @@ const ListScreen2 = () => {
   type RouteParams = {
     sid: string;
     cid: string;
-    type: number;
+    
   };
 
   type RouteProps = {
@@ -86,7 +86,8 @@ const ListScreen2 = () => {
   };
 
   type Subject = {
-    performance: number;
+    letter:string;
+    percent:number;
   };
 };
 
@@ -102,11 +103,12 @@ const styles = StyleSheet.create({
   setFontSizeOne: {
     fontSize: 30, // Define font size here in Pixels
     left: 0,
-    color: "white",
+    color: "#FFFFFF",
+    fontFamily: "sans-serif-medium",
   },
   container: {
     flex: 1,
-    alignItems: "center",
+    // alignItems: "center",
     justifyContent: "center",
   },
   CardStyle: {

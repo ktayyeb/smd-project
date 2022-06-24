@@ -40,7 +40,7 @@ const AddCourse = () => {
     console.log("===============================================================================================================")
     console.log(assignmentBest)
     await axios
-      .post("http://192.168.113.185:3000/courseWork/newCourse", {
+      .post("http://192.168.100.25:3000/courseWork/newCourse", {
         sid: 5555,
         cid: Number(courseID),
         title: courseName,

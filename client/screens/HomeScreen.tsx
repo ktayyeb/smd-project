@@ -34,7 +34,7 @@ const HomeScreen = () => {
   const [subject, setSubject] = useState<Subject[]>();
 
   useEffect(() => {
-    Promise.all([axios.default.get(`http://192.168.113.185:3000/${Day}/`)]).then(
+    Promise.all([axios.default.get(`http://192.168.100.25:3000/${Day}/`)]).then(
       ([{ data: subjectsResults }]) => {
         console.log("haaa", subjectsResults);
         if (subjectsResults) setSubject(subjectsResults);

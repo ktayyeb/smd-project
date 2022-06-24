@@ -19,7 +19,7 @@ const ListScreen2 = () => {
 
   useEffect(() => {
     Promise.all([
-      axios.default.get(`http://192.168.113.185:3000/${term}/`),
+      axios.default.get(`http://192.168.100.25:3000/${term}/`),
     ]).then(([{ data: subjectsResults }]) => {
       console.log("haaa", subjectsResults);
       if (subjectsResults) setSubject(subjectsResults);
