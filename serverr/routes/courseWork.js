@@ -7,16 +7,9 @@ const Weights=require('../models/weights')
 const Numeric=require('../models/numeric')
 
 
-//calculate the best percentage a student can get out of an assessment(quizzes,assignments,etc)
+//calculate the best percentage a student can get out of an assessment(quizzes,assignments,etc).
 async function getBest(Sid,Cid, Type,Best) {
-  // let Best = await Weights.findOne({ sid:Sid, cid: Cid, type: Type })
-  // if(Best==null){return null;}
-  // Best=Best.best
-  console.log(Sid);
-  console.log(Cid);
-  console.log(Type);
-  console.log(Best);
-
+  
   let arr =  await Assessment.find({ sid:Sid, cid: Cid, type: Type })
                             .sort({grade:-1})
                             .limit(Best);
@@ -24,10 +17,9 @@ async function getBest(Sid,Cid, Type,Best) {
   let score = 0;
   let total = 0;
 
-
   const len=arr.length
   let ratio=0
-  console.log(arr)
+  
   
   if (len>=Best){
     ratio=1
@@ -35,9 +27,6 @@ async function getBest(Sid,Cid, Type,Best) {
   else{
     ratio=len/Best
   }
-
-  console.log(ratio)
-
 
   let result = arr.reduce((prev, x) => {
     score += x.grade;
@@ -53,23 +42,14 @@ async function getBest(Sid,Cid, Type,Best) {
 }
 
 //posts a grade of a student in a specific assessment
+//the user cannot provide more assignments than the total num assigned at the beginning.
 router.post('/assessment',async(req,res)=>{
-
 
   const courseInfo = await Weights.findOne({sid:req.body.sid,cid:req.body.cid});
 
   const Type = req.body.type;
 
   const assessmentInfo = Type===0?courseInfo.assignments:Type===1?courseInfo.quizzes:Type===2?courseInfo.midterms:Type===3?courseInfo.projects:courseInfo.final;
-  console.log(courseInfo);
-  console.log(assessmentInfo);
-
-  //console.log(assessmentInfo);
-  //console.log(course);
-
-  console.log(assessmentInfo.completed)
-  console.log(assessmentInfo.completed)
-  
   
   if(assessmentInfo.completed>=assessmentInfo.num){
     res.send({message:"You inserted all of your assessments here!"});
@@ -77,55 +57,62 @@ router.post('/assessment',async(req,res)=>{
   }
 
   else{
-    console.log('here');
+
   await Assessment.create({
-    sid:req.body.sid,
-    cid:req.body.cid,
-    title:courseInfo.title,
-    type:Type,
-    weight:assessmentInfo.weight,
-    num:(assessmentInfo.completed+1),
-    grade:req.body.grade,
-    totalGrade:req.body.totalGrade,
-    best:assessmentInfo.best,
-    totalNum:assessmentInfo.num
+    sid:req.body.sid,                      //student id
+    cid:req.body.cid,                     //course id
+    title:courseInfo.title,              //name of the course
+    type:Type,                          //type of assessment 0:assignment ,1:quiz, 2:midterm, 3:project 4:final
+    weight:assessmentInfo.weight,      //the weight of the assessment from thw whole course work
+    num:(assessmentInfo.completed+1), //assessment no.
+    grade:req.body.grade,            //student's grade in this assignment
+    totalGrade:req.body.totalGrade, //the total grade of the assessment
+    best:assessmentInfo.best,      //how many assessments are counted
+    totalNum:assessmentInfo.num   //the total assessments the user shall provide in that type.
     
   }).then((a)=> {res.send(a);}).catch((e)=>{res.send(e)});
 
   const update= await updateWeight(req.body.sid,req.body.cid,Type,assessmentInfo);
   console.log('update',update);
 
-  //Assessment.create(req.body).then((a)=> {res.send(a)}).catch((e)=>{console.log(e);});
+  
   }
 
 });
 
 
+//function that updates course info (model:Weights) when the user submits hid grades in a specific asssessment.
+//The no of assessments (according to type) the student has entered is incremented. 
+//Also,the performance of the student in this type of assessments is updated.
+//ex: if performance in assignments is equal to 10 
+//that means that the student have gained 10% from the course work using assignments.
+
 async function updateWeight(Sid,Cid,Type,assessment){
+  //calculates the max percentage(from the total percentage of the course) the student can get after submitting the new assessment.
   const Results=await getBest(Sid,Cid, Type,assessment.best);
-  //console.log(Results);
-  if(Type===0){
-  //console.log("i'm here")  
+
+  if(Type===0){//assessment is an asssignment
+  
   Weights.updateOne({sid:Sid,cid:Cid},{assignments:{num:assessment.num,weight:assessment.weight,best:assessment.best,completed:(assessment.completed+1),results:Results}})
   .then((update)=> {return update;}).catch((e)=>{console.log(e)});
 }
 
-else if(Type===1){
+else if(Type===1){//assessment is an quiz
   Weights.updateOne({sid:Sid,cid:Cid},{quizzes:{num:assessment.num,weight:assessment.weight,best:assessment.best,completed:(assessment.completed+1),results:Results}})
   .then((update)=> {return update;}).catch((e)=>{console.log(e)});
 }
 
-else if(Type===2){
+else if(Type===2){//assessment is a midterm exam
   Weights.updateOne({sid:Sid,cid:Cid},{midterms:{num:assessment.num,weight:assessment.weight,best:assessment.best,completed:(assessment.completed+1),results:Results}})
   .then((update)=> {return update;}).catch((e)=>{console.log(e)});
 }
 
-else if(Type===3){
+else if(Type===3){//assessment is a project
   Weights.updateOne({sid:Sid,cid:Cid},{projects:{num:assessment.num,weight:assessment.weight,best:assessment.best,completed:(assessment.completed+1),results:Results}})
   .then((update)=> {return update;}).catch((e)=>{console.log(e)});
 }
 
-else if(Type===4){
+else if(Type===4){//assessment is a final exam
   Weights.updateOne({sid:Sid,cid:Cid},{final:{num:assessment.num,weight:assessment.weight,best:assessment.best,completed:(assessment.completed+1),results:Results}})
   .then((update)=> {return update;}).catch((e)=>{console.log(e)});
 }
@@ -137,6 +124,7 @@ else{
 }
 
 //posts a new course
+//the user cannot add the same course twice
 router.post('/newCourse',async(req,res)=>{
   const courseInfo1 = await Weights.findOne({sid:req.body.sid,cid:req.body.cid});
   const courseInfo2 = await Weights.findOne({sid:req.body.sid,title:req.body.title});
@@ -144,7 +132,6 @@ router.post('/newCourse',async(req,res)=>{
 
   if(courseInfo1!=null||courseInfo2!=null){
     res.send({message:"this course has been added before"});
-    //return;
   }
 
 
@@ -153,23 +140,33 @@ else{
 }
 });
 
+//get request that gets all the courses the student provided
 router.get('/allCourses/:sid',(req,res)=>{
   Weights.find({sid:req.params.sid},{title:1,cid:1}).sort({title:-1}).then((courses)=> {res.send(courses);} ).catch((e)=>{res.send(e)});
 
 });
 
+//post request that we used to combine numeric final grade to the letter one
+//example document from the model nymeric: {result:A+ numeric:0.7}
+//it was implemented to post all the possible finalGrades from A+ to F
+//this model helped to convert the letterGrade the user enters to numeric
+//as we need the numeric grade to calculate the gpa
+//i can easily convert the letter to numeric instead of using a huge bunch of if statements.
+
 router.post('/numerics',(req,res)=>{
   Numeric.create(req.body).then((a)=> {res.send(a);} ).catch((e)=>{res.send(e)});
 });
 
-
+//post request saves the finalGrade(of a course) the user enters in collection finalGrade.
+//the user cannot provide the final grade until the course work is completed
+//as the student doesn't always know what is the grade he got in the final exam
+//we calculate that for him(he doesn't need it to provide as the rest of the course work as he doesn't have access to it).
 router.post('/finalGrade',async (req,res)=>{
   
   let numericScore = await Numeric.findOne({result:req.body.result});
   const finalGrade= await FinalGrade.findOne({sid:req.body.sid,cid:req.body.cid});
 
   const courseInfo = await Weights.findOne({sid:req.body.sid,cid:req.body.cid});
-  //if(courseInfo.assignments.complted>=)
 
   if(courseInfo.assignments.completed<courseInfo.assignments.num || 
     courseInfo.quizzes.completed<courseInfo.quizzes.num ||
@@ -183,21 +180,16 @@ router.post('/finalGrade',async (req,res)=>{
   else{
 
   if(finalGrade!=null){res.send({message:"this course has been added before"});}
-  //console.log('numeric',numericScore);
+  
   else{
   numericScore=numericScore.numeric
-  //console.log('numeric',numericScore);
+  
 
   let course= await Weights.findOne({sid:req.body.sid,cid:req.body.cid})
-  //console.log('weight',hrs);
+  
   let hrs=course.hours
 
   let Title=course.title
-  //console.log('hrs',hrs);
-
-  //console.log('numericScore:',numericScore);
-  //console.log('hours:',hrs);
-
 
   FinalGrade.create({
     sid:req.body.sid,
@@ -214,6 +206,8 @@ router.post('/finalGrade',async (req,res)=>{
     
   }).then((a)=> {res.send(a)}).catch((e)=>{res.send(e)});
 
+  //function that saves the record of the final exam in the db.
+  //uses the function "finalExamGrade" to calculate the score of the final exam.
 
   let finalExamGrade=await updateFinalExam(req.body.sid,req.body.cid);
    await Assessment.create({
@@ -240,16 +234,18 @@ router.post('/finalGrade',async (req,res)=>{
 });
 
 
-router.get('/assessments/:sid/:cid/:type',(req,res)=>{
+/*router.get('/assessments/:sid/:cid/:type',(req,res)=>{
   Assessment.find({sid:req.params.sid,cid:req.params.cid,type:req.params.type},{title:1,num:1,grade:1,totalGrade:1}).sort({num:-1}).then((assessments)=> {res.send({assessments,});} ).catch((e)=>{res.send(e)});
+  
+});*/
 
-});
-
+//get request that to find the courseWork of the student by type 
 router.get('/allExams/:sid/:cid/:type',async(req,res)=>{
   Assessment.find({sid:req.params.sid,cid:req.params.cid,type:req.params.type},{title:1,num:1,grade:1,totalGrade:1}).then((courses)=> {res.send(courses);} ).catch((e)=>{res.send(e)});
 
 });
 
+//get request that calculates the gpa and updates it regularly when it's called
 router.get('/gpa/:sid',async(req,res)=>{
 
   let gpa = await GPA.find({sid:req.params.sid})
@@ -274,33 +270,26 @@ router.get('/gpa/:sid',async(req,res)=>{
     return  totalPoints/totalHours;
   }, 0);
 
-  console.log('totalPoints',totalPoints);
-  console.log('totalHours',totalHours);
-  console.log('studentGPA',studentGPA);
-
   let letterGPA= await Numeric.findOne({numeric:studentGPA});
   letterGPA=letterGPA.result;
-  console.log(letterGPA);
-
-
-
+  
    await GPA.create({
     sid:req.params.sid,
     gpa:studentGPA,
     gpaLetter:letterGPA
 
-  })//.then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
+  })
 
   await GPA.find({sid:req.params.sid}).then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
-  //await GPA.find({sid:req.params.sid}).then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
-
-
+  
 });
 
+//get reuest that finds all the finalGrades of the student to be used in the transcript.
 router.get('/allScores/:sid',(req,res)=>{
    FinalGrade.find({sid:req.params.sid},{title:1,hours:1,result:1,numeric:1}).sort({hours:-1}).then((response)=> {res.send(response)}).catch((e)=>{res.send(e)});
 });
 
+//calculates the user's grade in the final exam.
 async function updateFinalExam(Sid,Cid){
   const courseInfo = await Weights.findOne({sid:Sid,cid:Cid});
 
@@ -309,71 +298,7 @@ async function updateFinalExam(Sid,Cid){
 }
 
 
-
-//posts the neumerical final grade the student gets in a course
-/*router.post('/finalGrades',async(req,res)=>{
-
-  const Sid = req.body.sid
-  const Cid = req.body.cid
-
-  const assignments=await getBest(Sid,Cid, 0);
-  if(assignments==null){res.send({message:"assignments not completed"})}
-
-  const quizzes=await getBest(Sid,Cid, 1);
-  if(quizzes==null){return res.send({message:"quizzes not completed"})}
-
-  const midterm=await getBest(Sid,Cid, 2);
-  if(midterm==null){return res.send({message:"midterm not completed"})}
-  
-  const projects=await getBest(Sid,Cid, 3);
-  if(projects==null){return res.send({message:"projects not completed"})}
-
-  const final=await getBest(Sid,Cid, 4);
-  if(final==null){return res.send({message:"final not completed"})}
-
-  const Result= assignments+quizzes+midterm+projects+final;
-  console.log(Result);
-
-
-  FinalGrades.create({
-    sid:Sid,
-    cid:Cid,
-    hours:req.body.hours,
-    result:Result
-  }).then((a)=> {res.send(a)}).catch((e)=>{console.log(e);});
-  
-});*/
-
-/*router.get('/expectations',async(req,res)=>{
-
-  const Sid = req.body.sid
-  const Cid = req.body.cid
-
-  const assignments=await getBest(Sid,Cid, 0);
-  if(assignments==null){assignments=0}
-
-  const quizzes=await getBest(Sid,Cid, 1);
-  if(quizzes==null){quizzes=0}
-
-  const midterm=await getBest(Sid,Cid, 2);
-  if(midterm==null){midterm=0}
-  
-  const projects=await getBest(Sid,Cid, 3);
-  if(projects==null){projects=0}
-
-  const final=await getBest(Sid,Cid, 4);
-  if(final==null){final=0}
-
-  const Result= assignments+quizzes+midterm+projects+final;
-  console.log(Result);
-
-
-  
-});*/
-
-
-
-//endpoint to get the best percentage a student can get out of an assessment(quizzes,assignments,etc)
+//endpoint to get the best percentage a student can get out of an assessment from the course info(model:Weights)(quizzes,assignments,etc)
 router.get('/bests/:sid/:cid/:type',async(req,res)=>{
   const courseInfo = await Weights.findOne({sid:req.params.sid,cid:req.params.cid});
 
@@ -385,7 +310,6 @@ router.get('/bests/:sid/:cid/:type',async(req,res)=>{
   const assessmentInfo = Type===0?courseInfo.assignments:Type===1?courseInfo.quizzes:Type===2?courseInfo.midterms:Type===3?courseInfo.projects:courseInfo.final;
   console.log(assessmentInfo);
 
-  //const result = await getBest(req.params.sid,req.params.cid,req.params.type,assessmentInfo.best);
   res.send([{performance:assessmentInfo.results}])
   
   
