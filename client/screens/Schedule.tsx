@@ -1,7 +1,14 @@
 import { useRoute } from "@react-navigation/native";
 import * as axios from "axios";
 import React, { ReactNode, useEffect, useRef, useState } from "react";
-import { View,  StyleSheet, Image, FlatList, Alert, ImageBackground } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  FlatList,
+  Alert,
+  ImageBackground,
+} from "react-native";
 import { Text, Card } from "react-native-elements";
 import { white } from "react-native-paper/lib/typescript/styles/colors";
 
@@ -12,7 +19,7 @@ const ListScreen2 = () => {
 
   useEffect(() => {
     Promise.all([
-      axios.default.get(`http://192.168.100.11:3000/${term}/`),
+      axios.default.get(`http://192.168.113.185:3000/${term}/`),
     ]).then(([{ data: subjectsResults }]) => {
       console.log("haaa", subjectsResults);
       if (subjectsResults) setSubject(subjectsResults);
@@ -37,17 +44,17 @@ const ListScreen2 = () => {
       resizeMode="cover"
       style={styles.image}
     >
-    <View style={styles.container}>
-      <View style={styles.space} />
-      <Text style={styles.setFontSizeOne}> {term} </Text>
-      <View style={styles.space} />
+      <View style={styles.container}>
+        <View style={styles.space} />
+        <Text style={styles.setFontSizeOne}> {term} </Text>
+        <View style={styles.space} />
 
-      <FlatList
-        data={subject}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.name}
-      />
-    </View>
+        <FlatList
+          data={subject}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.name}
+        />
+      </View>
     </ImageBackground>
   );
 

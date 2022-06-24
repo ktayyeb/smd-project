@@ -239,6 +239,7 @@ router.post('/finalGrade',async (req,res)=>{
 
 });
 
+
 router.get('/assessments/:sid/:cid/:type',(req,res)=>{
   Assessment.find({sid:req.params.sid,cid:req.params.cid,type:req.params.type},{title:1,num:1,grade:1,totalGrade:1}).sort({num:-1}).then((assessments)=> {res.send({assessments,});} ).catch((e)=>{res.send(e)});
 

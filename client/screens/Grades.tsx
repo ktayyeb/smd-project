@@ -1,6 +1,7 @@
 import { useRoute } from "@react-navigation/native";
 import * as axios from "axios";
 import React, { ReactNode, useEffect, useRef, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   View,
   StyleSheet,
@@ -8,9 +9,11 @@ import {
   FlatList,
   Alert,
   ImageBackground,
+  Button,
 } from "react-native";
 import { Text, Card } from "react-native-elements";
 import { white } from "react-native-paper/lib/typescript/styles/colors";
+import Performance from "../screens/Performance";
 
 const ListScreen2 = () => {
   const route = useRoute<RouteProps>();
@@ -18,40 +21,48 @@ const ListScreen2 = () => {
   const { cid } = route.params;
   const { type } = route.params;
   const [subject, setSubject] = useState<Subject[]>();
+  const navigation = useNavigation();
+  var Type = "";
+  if (type === 0) {
+    Type = "Assignment";
+  } else if (type === 1) {
+    Type = "Quiz";
+  } else if (type === 2) {
+    Type = "Midterm";
+  } else if (type === 3) {
+    Type = "Project";
+  } else if (type === 4) {
+    Type = "Final";
+  }
 
-//   var Type = "";
+  console.log(Type);
 
-//   if (type === 0) {
-//     Type = "Assignment Grades";
-//   } else if (type === 1) {
-//     Type = "Quiz Grades";
-//   } else if (type === 2) {
-//     Type = "Midterm Grades";
-//   } else if (type === 3) {
-//     Type = "Project Grades";
-//   } else if (type === 4) {
-//     Type = "Final Grades";
-//   }
+  console.log(sid);
+  console.log(cid);
+  console.log(type);
 
   useEffect(() => {
     Promise.all([
       axios.default.get(
-        `http://192.168.100.11:3000/courseWork/assessments/${sid}/${cid}/${type}`
+        `http://192.168.113.185:3000/courseWork/allExams/${sid}/${cid}/${type}`
       ),
     ]).then(([{ data: subjectsResults }]) => {
+      console.log("haaa", subjectsResults);
       if (subjectsResults) setSubject(subjectsResults);
     });
   }, []);
 
   const renderItem = ({ item }) => (
     <Card style={{ flex: 1, width: 100 }}>
-      <Card.Title style={{ flex: 1 }}> Type {item.num}</Card.Title>
+      <Card.Title style={{ flex: 1 }}>
+        {Type} No. {item.num}
+      </Card.Title>
       <Card.Divider />
 
       <Text style={{ marginBottom: 10 }}>
-      
-        {item.grade} / {item.totalGrade}
+        Grade: {item.grade} / {item.totalGrade}{" "}
       </Text>
+
     </Card>
   );
 
@@ -61,9 +72,8 @@ const ListScreen2 = () => {
       resizeMode="cover"
       style={styles.image}
     >
+      <Text style={styles.setFontSizeOne}> {Type} Grades </Text>
       <View style={styles.container}>
-        <View style={styles.space} />
-        {/* <Text style={styles.setFontSizeOne}> {Type} </Text> */}
         <View style={styles.space} />
 
         <FlatList
@@ -71,15 +81,26 @@ const ListScreen2 = () => {
           renderItem={renderItem}
           keyExtractor={(item) => item.name}
         />
-     </View>
-  </ImageBackground>
+
+        <Button
+          onPress={() => {
+            navigation.navigate("Performance", {
+              sid: "5555",
+              cid: cid, 
+              type: type,
+            });
+          }}
+          title="Get Performance"
+          color="#0096FF"
+        />
+      </View>
+    </ImageBackground>
   );
 
   type RouteParams = {
     sid: string;
-    cid: string; 
-    type: string; 
-
+    cid: string;
+    type: number;
   };
 
   type RouteProps = {
@@ -90,17 +111,10 @@ const ListScreen2 = () => {
 
   type Subject = {
     _id: string;
-    cid: number;
-    title: string;
     grade: number;
-    totalGrade: number;
     num: number;
-    best: number; 
-    type: number; 
-    totalNum: number; 
-    weight: number; 
-    __v: number; 
-
+    title: string;
+    totalGrade: number;
   };
 };
 
@@ -116,11 +130,12 @@ const styles = StyleSheet.create({
   setFontSizeOne: {
     fontSize: 30, // Define font size here in Pixels
     left: 0,
-    color: "white",
+    color: "#FFFFFF",
+    fontFamily: "sans-serif-medium",
   },
   container: {
     flex: 1,
-    alignItems: "center",
+    // alignItems: "center",
     justifyContent: "center",
   },
   CardStyle: {

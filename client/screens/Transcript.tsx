@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { Text, Card } from "react-native-elements";
 import { white } from "react-native-paper/lib/typescript/styles/colors";
-import GPA from '../screens/GPA'
+import GPA from "../screens/GPA";
 
 const ListScreen2 = () => {
   const route = useRoute<RouteProps>();
@@ -24,7 +24,7 @@ const ListScreen2 = () => {
   useEffect(() => {
     Promise.all([
       axios.default.get(
-        `http://192.168.100.11:3000/courseWork/allScores/${sid}/`
+        `http://192.168.113.185:3000/courseWork/allScores/${sid}/`
       ),
     ]).then(([{ data: subjectsResults }]) => {
       console.log("haaa", subjectsResults);
@@ -55,7 +55,8 @@ const ListScreen2 = () => {
     >
       <View style={styles.container}>
         <View style={styles.space} />
-      
+        <Text style={styles.setFontSizeOne}> Courses Grades</Text>
+
         <View style={styles.space} />
 
         <FlatList
@@ -63,7 +64,7 @@ const ListScreen2 = () => {
           renderItem={renderItem}
           keyExtractor={(item) => item.name}
         />
-        
+
         <View style={styles.space} />
 
         <Button
@@ -72,9 +73,8 @@ const ListScreen2 = () => {
               sid: "5555",
             });
           }}
-          title="Get GPA"
+          title="Get your GPA"
           color="#0096FF"
-          
         />
       </View>
     </ImageBackground>

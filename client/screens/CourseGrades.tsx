@@ -13,7 +13,7 @@ import axios from "axios";
 import { useRoute } from "@react-navigation/native";
 import SelectDropdown from "react-native-select-dropdown";
 import { useNavigation } from "@react-navigation/native";
-import Grades from "../screens/Grades"
+import Grades from "../screens/Grades";
 
 const AddCourse = () => {
   const Grades = [
@@ -34,7 +34,7 @@ const AddCourse = () => {
   // const handleGrade = async () => {
   //   console.log(gpaGrade);
   //   await axios
-  //     .post("http://192.168.100.11:3000/courseWork/newCourse", {
+  //     .post("http://192.168.113.185:3000/courseWork/newCourse", {
   //       sid: 5555,
   //       Grade: Number(gpaGrade),
   //     })
@@ -66,15 +66,16 @@ const AddCourse = () => {
   const [finalGrade, setFinalGrade] = useState();
   const [finalTotalGrade, setFinalTotalGrade] = useState();
 
+  const [gradeObtained, setGradeObtained] = useState("");
+
   const route = useRoute<RouteProps>();
   const { term } = route.params;
   const { id } = route.params;
   const [subject, setSubject] = useState<Subject[]>();
 
   useEffect(() => {
-    Promise.all([axios.get(`http://192.168.100.11:3000/${term}/`)]).then(
+    Promise.all([axios.get(`http://192.168.113.185:3000/${term}/`)]).then(
       ([{ data: subjectsResults }]) => {
-        
         if (subjectsResults) setSubject(subjectsResults);
       }
     );
@@ -82,17 +83,15 @@ const AddCourse = () => {
 
   useEffect(() => {
     Promise.all([
-      axios.get(`http://192.168.100.11:3000/courseWork/allCourses/5555/`),
+      axios.get(`http://192.168.113.185:3000/courseWork/allCourses/5555/`),
     ]).then(([{ data: subjectsResults }]) => {
-     
       if (subjectsResults) setSubject(subjectsResults);
     });
   }, []);
 
   useEffect(() => {
-    Promise.all([axios.get(`http://192.168.100.11:3000/${id}/`)]).then(
+    Promise.all([axios.get(`http://192.168.113.185:3000/${id}/`)]).then(
       ([{ data: subjectsResults }]) => {
-       
         if (subjectsResults) setSubject(subjectsResults);
       }
     );
@@ -101,7 +100,7 @@ const AddCourse = () => {
   const handleAssignment = async () => {
     console.log(assignmentTotalGrade);
     await axios
-      .post("http://192.168.100.11:3000/courseWork/assessment", {
+      .post("http://192.168.113.185:3000/courseWork/assessment", {
         sid: 5555,
         cid: id,
         grade: Number(assignmentGrade),
@@ -112,8 +111,12 @@ const AddCourse = () => {
         console.log(response.data);
         if (response.data.message == undefined) {
           alert("Assignment Grade Submitted!");
+        } else if (
+          response.data.message === "You inserted all of your assessments here!"
+        ) {
+          alert("You inserted all of your assignments !");
         } else {
-          alert("Please Fill Assignment Grade!");
+          alert("Please fill the missing fields!");
         }
       })
       .catch((error) => console.log(error));
@@ -122,7 +125,7 @@ const AddCourse = () => {
   const handleQuiz = async () => {
     console.log(assignmentTotalGrade);
     await axios
-      .post("http://192.168.100.11:3000/courseWork/assessment", {
+      .post("http://192.168.113.185:3000/courseWork/assessment", {
         sid: 5555,
         cid: id,
         grade: Number(quizGrade),
@@ -133,8 +136,12 @@ const AddCourse = () => {
         console.log(response.data);
         if (response.data.message == undefined) {
           alert("Quiz Grade Submitted!");
+        } else if (
+          response.data.message === "You inserted all of your assessments here!"
+        ) {
+          alert("You inserted all of your quizez !");
         } else {
-          alert("Please Fill Quiz Grade!");
+          alert("Please fill the missing fields!");
         }
       })
       .catch((error) => console.log(error));
@@ -143,7 +150,7 @@ const AddCourse = () => {
   const handleProject = async () => {
     console.log(assignmentTotalGrade);
     await axios
-      .post("http://192.168.100.11:3000/courseWork/assessment", {
+      .post("http://192.168.113.185:3000/courseWork/assessment", {
         sid: 5555,
         cid: id,
         grade: Number(projectGrade),
@@ -154,8 +161,12 @@ const AddCourse = () => {
         console.log(response.data);
         if (response.data.message == undefined) {
           alert("Project Grade Submitted!");
+        } else if (
+          response.data.message === "You inserted all of your assessments here!"
+        ) {
+          alert("You inserted all of your projects !");
         } else {
-          alert("Please Fill Project Grade!");
+          alert("Please fill the missing fields!");
         }
       })
       .catch((error) => console.log(error));
@@ -164,7 +175,7 @@ const AddCourse = () => {
   const handleMidterm = async () => {
     console.log(assignmentTotalGrade);
     await axios
-      .post("http://192.168.100.11:3000/courseWork/assessment", {
+      .post("http://192.168.113.185:3000/courseWork/assessment", {
         sid: 5555,
         cid: id,
         grade: Number(midtermGrade),
@@ -175,8 +186,12 @@ const AddCourse = () => {
         console.log(response.data);
         if (response.data.message == undefined) {
           alert("Midterm Grade Submitted!");
+        } else if (
+          response.data.message === "You inserted all of your assessments here!"
+        ) {
+          alert("You inserted all of your midterms!");
         } else {
-          alert("Please Fill Midterm Grade!");
+          alert("Please fill the missing fields!");
         }
       })
       .catch((error) => console.log(error));
@@ -185,7 +200,7 @@ const AddCourse = () => {
   const handleFinal = async () => {
     console.log(assignmentTotalGrade);
     await axios
-      .post("http://192.168.100.11:3000/courseWork/assessment", {
+      .post("http://192.168.113.185:3000/courseWork/assessment", {
         sid: 5555,
         cid: id,
         grade: Number(finalGrade),
@@ -196,8 +211,35 @@ const AddCourse = () => {
         console.log(response.data);
         if (response.data.message == undefined) {
           alert("Final Grade Submitted!");
+        } else if (
+          response.data.message === "You inserted all of your assessments here!"
+        ) {
+          alert("You already inserted your final !");
         } else {
-          alert("Please Fill Final Grade!");
+          alert("Please fill the missing fields!");
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const handleGradeObtainted = async () => {
+    console.log(gradeObtained);
+    await axios
+      .post("http://192.168.113.185:3000/courseWork/finalGrade", {
+        sid: 5555,
+        cid: id,
+        result: gradeObtained,
+      })
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.message == undefined) {
+          alert("Grade Submitted!");
+        } else if (
+          response.data.message === "Please complete filling your course work"
+        ) {
+          alert("Please complete filling your course work");
+        } else {
+          alert("The final grade for this course has been added before!");
         }
       })
       .catch((error) => console.log(error));
@@ -251,7 +293,7 @@ const AddCourse = () => {
             onPress={() => {
               navigation.navigate("Grades", {
                 sid: "5555",
-                cid: id, 
+                cid: id,
                 type: 0,
               });
             }}
@@ -284,12 +326,12 @@ const AddCourse = () => {
             title="Submit Quiz"
             onPress={handleQuiz}
           />
-           <View style={styles.space} />
+          <View style={styles.space} />
           <Button
             onPress={() => {
               navigation.navigate("Grades", {
                 sid: "5555",
-                cid: id, 
+                cid: id,
                 type: 1,
               });
             }}
@@ -322,12 +364,12 @@ const AddCourse = () => {
             title="Submit Project"
             onPress={handleProject}
           />
-           <View style={styles.space} />
+          <View style={styles.space} />
           <Button
             onPress={() => {
               navigation.navigate("Grades", {
                 sid: "5555",
-                cid: id, 
+                cid: id,
                 type: 3,
               });
             }}
@@ -360,12 +402,12 @@ const AddCourse = () => {
             title="Submit Midterm"
             onPress={handleMidterm}
           />
-           <View style={styles.space} />
+          <View style={styles.space} />
           <Button
             onPress={() => {
               navigation.navigate("Grades", {
                 sid: "5555",
-                cid: id, 
+                cid: id,
                 type: 2,
               });
             }}
@@ -375,44 +417,39 @@ const AddCourse = () => {
         </View>
         <View>
           <Text style={styles.setFontSizeOne}> Final </Text>
-          <View style={{ flexDirection: "row", flex: 1 }}>
-            <TextInput
-              style={styles.input}
-              onChangeText={(text: string) => setFinalGrade(text)}
-              value={finalGrade}
-              placeholder="Grade"
-              placeholderTextColor="#E0E0E0"
-              keyboardType="numeric"
-            />
-            <TextInput
-              style={styles.input}
-              onChangeText={(text: string) => setFinalTotalGrade(text)}
-              value={finalTotalGrade}
-              placeholder="Total Grade"
-              placeholderTextColor="#E0E0E0"
-              keyboardType="numeric"
-            />
-          </View>
-          <Button
-            style={styles.smallButton}
-            title="Submit Final"
-            onPress={handleFinal}
-          />
-           <View style={styles.space} />
+
+          <View style={styles.space} />
           <Button
             onPress={() => {
               navigation.navigate("Grades", {
                 sid: "5555",
-                cid: id, 
+                cid: id,
                 type: 4,
               });
             }}
-            title="Check Final Grades"
+            title="Check Final Grade"
             color="#000000"
           />
         </View>
+        <View>
+          <Text style={styles.setFontSizeOne}> Grade Obtained </Text>
+          <View style={{ flexDFirection: "row", flex: 1 }}>
+            <TextInput
+              style={styles.input}
+              onChangeText={(text: string) => setGradeObtained(text)}
+              value={gradeObtained}
+              placeholder="Enter Letter"
+              placeholderTextColor="#E0E0E0"
+            />
+          </View>
+          <Button
+            style={styles.smallButton}
+            title="Submit Grade Obtained"
+            onPress={handleGradeObtainted}
+          />
+          <View style={styles.space} />
+        </View>
         <View style={styles.space} />
-      
       </ScrollView>
     </>
   );

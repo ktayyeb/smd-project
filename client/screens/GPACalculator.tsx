@@ -35,7 +35,7 @@ const GPACalculator = () => {
 
   useEffect(() => {
     Promise.all([
-      axios.get(`http://192.168.100.11:3000/courseWork/allCourses/5555/`),
+      axios.get(`http://192.168.113.185:3000/courseWork/allCourses/5555/`),
     ]).then(([{ data: subjectsResults }]) => {
       console.log("haaa", subjectsResults);
       if (subjectsResults) setSubject(subjectsResults);
@@ -45,7 +45,7 @@ const GPACalculator = () => {
   // const handleGPA = async () => {
   //   console.log(gpaGrade);
   //   await axios
-  //     .post("http://192.168.100.11:3000/courseWork/newCourse", {
+  //     .post("http://192.168.113.185:3000/courseWork/newCourse", {
   //       sid: 1500,
   //         Grade: Number(gpaGrade),
   //     })
